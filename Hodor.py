@@ -12,19 +12,22 @@ from output.HodorVideoOutput import HodorVideoOutput
 
 class Hodor(KineticMapEntity):
     ANGULAR_TOLERANCE = 10
-    SPACE_TOLERANCE = 100  # Distancia en milimetros
+    SPACE_TOLERANCE = 400  # Distancia en milimetros
     MOVEMENT_DELAY_IN_SECONDS = 1
 
-    def __init__(self, motor_control: MotorControl, video_device_id: int, tag_size: int,
+    def __init__(self, motor_control: MotorControl | None, video_device_id: int, frame_width: int, frame_height: int,
+                 tag_size: int,
                  calibration_type: CalibrationType, enable_gui=False):
         super().__init__(0, motor_control)
 
         self.camera = None
         self.video_device_id = video_device_id
+        self.frame_width = frame_width
+        self.frame_height = frame_height
         self.tag_size = tag_size
         self.calibration_type = calibration_type
-        self.video_output = None
-        self.tag_detector = None
+        self.video_output: HodorVideoOutput | None = None
+        self.tag_detector: HodorTagDetector | None = None
         self.enable_gui = enable_gui
         self.__status = Status.RESTING
 
@@ -36,7 +39,7 @@ class Hodor(KineticMapEntity):
         print("[INFO] Iniciando configuración...")
 
         ##### PASO 1: Inicializar instancia de cámara #####
-        self.camera = HodorCamera(video_id=self.video_device_id, enable_gui=self.enable_gui)
+        self.camera = HodorCamera(self.video_device_id, self.frame_width, self.frame_height, enable_gui=self.enable_gui)
 
         ##### PASO 2: Calibración #####
         if self.calibration_type == CalibrationType.SCRATCH:
@@ -64,10 +67,8 @@ class Hodor(KineticMapEntity):
 
     def loop(self):
         print("[INFO] Comenzando rutina...")
-        # self.go_to_target()
 
-        while True:
-            self.tag_detector.detect_apriltags(self.video_output)
+        self.go_to_target()
 
         print("[INFO] Rutina finalizada")
 
@@ -88,7 +89,7 @@ class Hodor(KineticMapEntity):
     def go_to_target(self) -> bool:
         distance = self.find_distance_to_target()
 
-        while distance < Hodor.SPACE_TOLERANCE:
+        while distance > Hodor.SPACE_TOLERANCE:
             self.move_forward()
             distance = self.find_distance_to_target()
 

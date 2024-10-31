@@ -6,6 +6,7 @@ import numpy as np
 from camera.HodorCamera import HodorCamera
 from common.Vector2 import Vector2
 from models.HodorAprilTag import HodorAprilTag
+from output.HodorVideoOutput import HodorVideoOutput
 
 
 class HodorTagDetector:
@@ -16,7 +17,7 @@ class HodorTagDetector:
         self.__tag_size = tag_size
         self.__enable_draw = enable_gui
 
-    def detect_apriltags(self, video_output=None) -> List[HodorAprilTag]:
+    def detect_apriltags(self, video_output: HodorVideoOutput | None = None) -> List[HodorAprilTag]:
         cam_frame = None
 
         while cam_frame is None:

@@ -6,9 +6,11 @@ import pickle
 
 
 class HodorCamera:
-    def __init__(self, video_id, enable_gui=False):
+    def __init__(self, video_id, frame_width, frame_height, enable_gui=False):
         self.__video_id = video_id
         self.__video_capture = cv2.VideoCapture(video_id)
+        self.__video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
+        self.__video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
         self.__enable_gui = enable_gui
         self.__calibration_success = False
         self.__camera_matrix = None
