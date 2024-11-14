@@ -49,8 +49,8 @@ class Hodor(KineticMapEntity):
             self.camera.calibrate_from_dataset()
 
         if self.calibration_type == CalibrationType.LOAD:
-            if os.path.exists("calibration.vi23"):
-                self.camera.load_calibration("calibration.vi23")
+            if os.path.exists("calibration.json"):
+                self.camera.load_calibration("calibration.json")
             else:
                 print("[WARN] calibration.vi23 no encontrado. Inicializando nueva calibración")
                 self.camera.calibrate_from_scratch()
@@ -99,4 +99,6 @@ class Hodor(KineticMapEntity):
     def cleanup(self):
         self.camera.close()
         cv2.destroyAllWindows()
-        self.video_output.close()
+
+        if self.video_output is not None:
+            self.video_output.close()

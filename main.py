@@ -2,7 +2,7 @@ from Hodor import Hodor
 from common.CalibrationType import CalibrationType
 
 # ID de dispositivo de video (En el robot hodor es id=8)
-VIDEO_DEVICE_ID = 0
+VIDEO_DEVICE_ID = 8
 FRAME_WIDTH = 1280
 FRAME_HEIGHT = 720
 

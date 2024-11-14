@@ -3,6 +3,8 @@ import numpy as np
 import glob
 import os
 import pickle
+import json
+import codecs
 
 
 class HodorCamera:
@@ -142,20 +144,38 @@ class HodorCamera:
                 "[ERR] La cámara aún no ha sido calibrada, por lo tanto no se puede guardar su configuración de calibración")
             return
 
-        file = open(file_path, 'wb')
-        pickle.dump((self.__camera_matrix, self.__dist_coeffs, self.__rvecs, self.__tvecs), file)
-        file.close()
+        # file = open(file_path, 'wb')
+        # pickle.dump((self.__camera_matrix, self.__dist_coeffs, self.__rvecs, self.__tvecs), file)
+        # file.close()
+
+        calibration_data = {
+            "camera_matrix": self.__camera_matrix.tolist(),
+            "fx": self.__fx,
+            "fy": self.__fy,
+            "cx": self.__cx,
+            "cy": self.__cy
+        }
+
+        json_calibration_data = json.dumps(calibration_data)
+
+        with open("calibration.json", "w") as outfile:
+            outfile.write(json_calibration_data)
 
         print("[INFO] Calibración guardada exitosamente")
 
     def load_calibration(self, file_path: str):
-        file = open(file_path, 'rb')
-        data = pickle.load(file)
-        self.__camera_matrix, self.__dist_coeffs, self.__rvecs, self.__tvecs = data
+        json_calibration_data = codecs.open(file_path, 'r', encoding='utf-8').read()
+        calibration_data = json.loads(json_calibration_data)
+
+        self.__camera_matrix = np.array(calibration_data['camera_matrix'])
+
         self.__set_parameters_from_matrix__()
         self.__calibration_success = True
 
-        print("[INFO] Calibración cargada exitosamente")
+        print("[INFO] Calibración cargada exitosamente. Parámetros de cámara:")
+        print("f: ({}, {})".format(self.__fx, self.__fy))
+        print("c: ({}, {})".format(self.__cx, self.__cy))
+
 
     def get_parameters(self):
         if self.__calibration_success:
