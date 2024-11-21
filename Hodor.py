@@ -8,6 +8,8 @@ from control.MotorControl import MotorControl
 from core.KineticMapEntity import KineticMapEntity
 from detection.HodorTagDetector import HodorTagDetector
 from output.HodorVideoOutput import HodorVideoOutput
+from models.HodorAprilTag import HodorAprilTag
+from typing import List
 
 
 class Hodor(KineticMapEntity):
@@ -76,11 +78,22 @@ class Hodor(KineticMapEntity):
         self.__status = status
         print("[INFO] Status update: " + str(status))
 
-    def find_distance_to_target(self) -> float:
+    def find_april_tags(self)-> List[HodorAprilTag]:
         april_tags = []
 
         while len(april_tags) <= 0:
             april_tags = self.tag_detector.detect_apriltags(self.video_output)
+            if self.__status != Status.FINDING_TARGET:
+                self.set_status(Status.FINDING_TARGET)
+                self.turn_left()
+        self.stop()
+        self.set_status(Status.READY_TO_GO)
+        return april_tags
+
+    def find_distance_to_target(self) -> float:
+        april_tags = april_tags = self.tag_detector.detect_apriltags(self.video_output)
+        if len(april_tags) <= 0:
+            april_tags = self.find_april_tags()
 
         print("[LOG] April tag encontrado. Distancia: {}".format(april_tags[0].relative_distance))
 
