@@ -19,7 +19,7 @@ class Hodor(KineticMapEntity):
         self.settings = settings
         self.motor_control = MotorControl(settings)
 
-        super().__init__(0, self.motor_control)
+        super().__init__(self.motor_control)
 
         self.camera = None
         self.video_device_id = settings.video_device_id
