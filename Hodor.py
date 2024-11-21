@@ -9,28 +9,30 @@ from core.KineticMapEntity import KineticMapEntity
 from detection.HodorTagDetector import HodorTagDetector
 from output.HodorVideoOutput import HodorVideoOutput
 from models.HodorAprilTag import HodorAprilTag
+from settings.HodorSettings import HodorSettings
 from typing import List
 
 
 class Hodor(KineticMapEntity):
-    ANGULAR_TOLERANCE = 10
-    SPACE_TOLERANCE = 400  # Distancia en milimetros
-    MOVEMENT_DELAY_IN_SECONDS = 1
+    def __init__(self, settings: HodorSettings, calibration_type: CalibrationType):
 
-    def __init__(self, motor_control: MotorControl | None, video_device_id: int, frame_width: int, frame_height: int,
-                 tag_size: int,
-                 calibration_type: CalibrationType, enable_gui=False):
-        super().__init__(0, motor_control)
+        self.settings = settings
+        self.motor_control = MotorControl(settings)
+
+        super().__init__(0, self.motor_control)
 
         self.camera = None
-        self.video_device_id = video_device_id
-        self.frame_width = frame_width
-        self.frame_height = frame_height
-        self.tag_size = tag_size
-        self.calibration_type = calibration_type
+        self.video_device_id = settings.video_device_id
+        self.frame_width = settings.video_frame_width
+        self.frame_height = settings.video_frame_height
+        self.enable_gui = settings.video_enable_gui
         self.video_output: HodorVideoOutput | None = None
+
+        self.tag_size = settings.tag_size
+        self.tag_family = settings.tag_family
         self.tag_detector: HodorTagDetector | None = None
-        self.enable_gui = enable_gui
+
+        self.calibration_type = calibration_type
         self.__status = Status.RESTING
 
         print("##############################################")
@@ -41,7 +43,7 @@ class Hodor(KineticMapEntity):
         print("[INFO] Iniciando configuración...")
 
         ##### PASO 1: Inicializar instancia de cámara #####
-        self.camera = HodorCamera(self.video_device_id, self.frame_width, self.frame_height, enable_gui=self.enable_gui)
+        self.camera = HodorCamera(self.settings)
 
         ##### PASO 2: Calibración #####
         if self.calibration_type == CalibrationType.SCRATCH:
@@ -63,7 +65,7 @@ class Hodor(KineticMapEntity):
             self.video_output = HodorVideoOutput(self.camera)
 
         ##### PASO 3: Inicializar detector de april tags #####
-        self.tag_detector = HodorTagDetector(self.camera, self.tag_size, enable_gui=self.enable_gui)
+        self.tag_detector = HodorTagDetector(self.camera, self.tag_size, self.tag_family, enable_gui=self.enable_gui)
 
         print("[INFO] Configuración finalizada")
 
@@ -78,20 +80,23 @@ class Hodor(KineticMapEntity):
         self.__status = status
         print("[INFO] Status update: " + str(status))
 
-    def find_april_tags(self)-> List[HodorAprilTag]:
+    def find_april_tags(self) -> List[HodorAprilTag]:
         april_tags = []
 
         while len(april_tags) <= 0:
             april_tags = self.tag_detector.detect_apriltags(self.video_output)
+
             if self.__status != Status.FINDING_TARGET:
                 self.set_status(Status.FINDING_TARGET)
                 self.turn_left()
+
         self.stop()
         self.set_status(Status.READY_TO_GO)
         return april_tags
 
     def find_distance_to_target(self) -> float:
-        april_tags = april_tags = self.tag_detector.detect_apriltags(self.video_output)
+        april_tags = self.tag_detector.detect_apriltags(self.video_output)
+
         if len(april_tags) <= 0:
             april_tags = self.find_april_tags()
 
@@ -102,7 +107,7 @@ class Hodor(KineticMapEntity):
     def go_to_target(self) -> bool:
         distance = self.find_distance_to_target()
 
-        while distance > Hodor.SPACE_TOLERANCE:
+        while distance > self.settings.control_tolerance_linear:
             self.move_forward()
             distance = self.find_distance_to_target()
 

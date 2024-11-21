@@ -10,8 +10,8 @@ from output.HodorVideoOutput import HodorVideoOutput
 
 
 class HodorTagDetector:
-    def __init__(self, camera: HodorCamera, tag_size, enable_gui=False):
-        self.__detector = Detector(families="tag36h11")
+    def __init__(self, camera: HodorCamera, tag_size, tag_family, enable_gui=False):
+        self.__detector = Detector(families=tag_family)
         self.__camera = camera
         self.__fx, self.__fy, self.__cx, self.__cy = camera.get_parameters()
         self.__tag_size = tag_size
@@ -58,14 +58,10 @@ class HodorTagDetector:
             distance = np.linalg.norm(detection.pose_t)
 
             r = detection.pose_R
+            # TODO: Revisar esto, parecen estar bien los nombres
             yaw = np.arctan2(r[1, 0], r[0, 0])
             pitch = np.arcsin(-r[2, 0])
             roll = np.arctan2(r[2, 1], r[2, 2])
-
-            # TODO: Revisar esto, parece no estar bien el orden
-            # yaw = np.arctan2(r[1, 0], r[0, 0])
-            # pitch = np.arctan2(-r[2, 0], np.sqrt(r[2, 1] ** 2 + r[2, 2] ** 2))
-            # roll = np.arctan2(r[2, 1], r[2, 2])
 
             yaw_degrees = np.degrees(yaw)
             pitch_degrees = np.degrees(pitch)
@@ -89,7 +85,7 @@ class HodorTagDetector:
             vec = Vector2()
             vec.set_cartesian(cx, cy)
 
-            results.append(HodorAprilTag(vec, detection.tag_id, distance))
+            results.append(HodorAprilTag(vec, detection.tag_id, distance, yaw_degrees, pitch_degrees, roll_degrees))
 
         if self.__enable_draw:
             cv2.imshow('Camera', cam_frame)

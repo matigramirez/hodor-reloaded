@@ -2,18 +2,19 @@ import cv2
 import numpy as np
 import glob
 import os
-import pickle
 import json
 import codecs
 
+from settings.HodorSettings import HodorSettings
+
 
 class HodorCamera:
-    def __init__(self, video_id, frame_width, frame_height, enable_gui=False):
-        self.__video_id = video_id
-        self.__video_capture = cv2.VideoCapture(video_id)
-        self.__video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
-        self.__video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
-        self.__enable_gui = enable_gui
+    def __init__(self, settings: HodorSettings):
+        self.__video_id = settings.video_device_id
+        self.__video_capture = cv2.VideoCapture(settings.video_device_id)
+        self.__video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, settings.video_frame_width)
+        self.__video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, settings.video_frame_height)
+        self.__enable_gui = settings.video_enable_gui
         self.__calibration_success = False
         self.__camera_matrix = None
         self.__dist_coeffs = None
@@ -144,10 +145,6 @@ class HodorCamera:
                 "[ERR] La cámara aún no ha sido calibrada, por lo tanto no se puede guardar su configuración de calibración")
             return
 
-        # file = open(file_path, 'wb')
-        # pickle.dump((self.__camera_matrix, self.__dist_coeffs, self.__rvecs, self.__tvecs), file)
-        # file.close()
-
         calibration_data = {
             "camera_matrix": self.__camera_matrix.tolist(),
             "fx": self.__fx,
@@ -175,7 +172,6 @@ class HodorCamera:
         print("[INFO] Calibración cargada exitosamente. Parámetros de cámara:")
         print("f: ({}, {})".format(self.__fx, self.__fy))
         print("c: ({}, {})".format(self.__cx, self.__cy))
-
 
     def get_parameters(self):
         if self.__calibration_success:
