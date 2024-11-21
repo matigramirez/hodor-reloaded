@@ -57,6 +57,9 @@ class HodorTagDetector:
 
             distance = np.linalg.norm(detection.pose_t)
 
+            angle_rad = np.arctan2(detection.pose_t[0], detection.pose_t[2])
+            angle_deg = np.degrees(angle_rad)[0]
+
             r = detection.pose_R
             # TODO: Revisar esto, parecen estar bien los nombres
             yaw = np.arctan2(r[1, 0], r[0, 0])
@@ -85,7 +88,7 @@ class HodorTagDetector:
             vec = Vector2()
             vec.set_cartesian(cx, cy)
 
-            results.append(HodorAprilTag(vec, detection.tag_id, distance, yaw_degrees, pitch_degrees, roll_degrees))
+            results.append(HodorAprilTag(vec, detection.tag_id, distance, angle_deg))
 
         if self.__enable_draw:
             cv2.imshow('Camera', cam_frame)

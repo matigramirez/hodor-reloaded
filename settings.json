@@ -6,7 +6,7 @@
     "enable_gui": false
   },
   "tag": {
-    "size": 145,
+    "size": 120,
     "family": "tag36h11"
   },
   "motor": {
@@ -16,8 +16,8 @@
   },
   "control": {
     "tolerance": {
-      "linear": 400,
-      "angular": 10
+      "linear": 50,
+      "angular": 7
     }
   },
   "movement": {

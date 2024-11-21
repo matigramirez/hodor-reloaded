@@ -35,9 +35,9 @@ class Hodor(KineticMapEntity):
         self.calibration_type = calibration_type
         self.__status = Status.RESTING
 
-        print("##############################################")
-        print("####           HODOR ft. VI23            #####")
-        print("##############################################")
+        print("""##############################################\n
+                ####           HODOR ft. VI23            #####\n
+                ##############################################""")
 
     def setup(self):
         print("[INFO] Iniciando configuración...")
@@ -48,18 +48,18 @@ class Hodor(KineticMapEntity):
         ##### PASO 2: Calibración #####
         if self.calibration_type == CalibrationType.SCRATCH:
             self.camera.calibrate_from_scratch()
+            self.camera.save_calibration("calibration.json")
 
         if self.calibration_type == CalibrationType.DATASET:
             self.camera.calibrate_from_dataset()
+            self.camera.save_calibration("calibration.json")
 
         if self.calibration_type == CalibrationType.LOAD:
             if os.path.exists("calibration.json"):
                 self.camera.load_calibration("calibration.json")
             else:
-                print("[WARN] calibration.vi23 no encontrado. Inicializando nueva calibración")
+                print("[WARN] calibration.json no encontrado. Inicializando nueva calibración")
                 self.camera.calibrate_from_scratch()
-
-        self.camera.save_calibration("calibration.vi23")
 
         if self.enable_gui:
             self.video_output = HodorVideoOutput(self.camera)
@@ -72,6 +72,7 @@ class Hodor(KineticMapEntity):
     def loop(self):
         print("[INFO] Comenzando rutina...")
 
+        self.find_april_tags()
         self.go_to_target()
 
         print("[INFO] Rutina finalizada")
@@ -80,27 +81,51 @@ class Hodor(KineticMapEntity):
         self.__status = status
         print("[INFO] Status update: " + str(status))
 
+    # def find_april_tags(self) -> List[HodorAprilTag]:
+    #     april_tags = []
+
+    #     while len(april_tags) <= 0:
+    #         april_tags = self.tag_detector.detect_apriltags(self.video_output)
+
+    #         if self.__status != Status.FINDING_TARGET:
+    #             self.set_status(Status.FINDING_TARGET)
+    #             self.turn_right()
+
+    #         if len(april_tags) > 0:
+    #             print(april_tags[0].angle)
+
+    #     self.stop()
+    #     self.set_status(Status.READY_TO_GO)
+    #     return april_tags
+
     def find_april_tags(self) -> List[HodorAprilTag]:
         april_tags = []
+        angle = 10000
 
-        while len(april_tags) <= 0:
+        while abs(angle) > self.settings.control_tolerance_angular:
             april_tags = self.tag_detector.detect_apriltags(self.video_output)
 
             if self.__status != Status.FINDING_TARGET:
                 self.set_status(Status.FINDING_TARGET)
-                self.turn_left()
+                self.turn_right()
+
+            if len(april_tags) > 0:
+                angle = april_tags[0].angle
+            else:
+                angle = 10000
 
         self.stop()
         self.set_status(Status.READY_TO_GO)
         return april_tags
 
     def find_distance_to_target(self) -> float:
-        april_tags = self.tag_detector.detect_apriltags(self.video_output)
+        april_tags = []
 
-        if len(april_tags) <= 0:
-            april_tags = self.find_april_tags()
+        while len(april_tags) <= 0:
+            april_tags = self.tag_detector.detect_apriltags(self.video_output)
 
-        print("[LOG] April tag encontrado. Distancia: {}".format(april_tags[0].relative_distance))
+        print("[LOG] April tag encontrado. Distancia: {}  -  Angulo: {}".format(april_tags[0].relative_distance,
+                                                                                april_tags[0].angle))
 
         return april_tags[0].relative_distance
 
@@ -108,8 +133,13 @@ class Hodor(KineticMapEntity):
         distance = self.find_distance_to_target()
 
         while distance > self.settings.control_tolerance_linear:
-            self.move_forward()
+            if self.__status != Status.NAVIGATING:
+                self.move_forward()
+                self.__status = Status.NAVIGATING
+
             distance = self.find_distance_to_target()
+
+        self.__status = Status.NAVIGATION_COMPLETED
 
         self.stop()
         return True
