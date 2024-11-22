@@ -30,10 +30,6 @@ class Hodor(KineticMapEntity):
 
         self.__status = Status.INITIALIZING
 
-        print("""##############################################\n
-                ####           HODOR ft. VI23            #####\n
-                ##############################################""")
-
     def setup(self):
         self.camera = HodorCamera(self.settings)
 

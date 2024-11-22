@@ -1,10 +1,12 @@
 from Hodor import Hodor
 from settings.HodorSettings import HodorSettings
 
-hodor_settings = HodorSettings()
-hodor_settings.read_from_file("settings.json")
+print("##############################################")
+print("####           HODOR ft. VI23            #####")
+print("##############################################")
 
-hodor = Hodor(hodor_settings)
+settings = HodorSettings.read_from_file("settings.json")
+hodor = Hodor(settings)
 
 try:
     hodor.motor_control.stop()
