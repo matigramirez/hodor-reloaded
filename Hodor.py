@@ -2,7 +2,6 @@ import cv2
 import os
 
 from camera.HodorCamera import HodorCamera
-from common.CalibrationType import CalibrationType
 from common.Status import Status
 from control.MotorControl import MotorControl
 from core.KineticMapEntity import KineticMapEntity
@@ -14,7 +13,7 @@ from typing import List
 
 
 class Hodor(KineticMapEntity):
-    def __init__(self, settings: HodorSettings, calibration_type: CalibrationType):
+    def __init__(self, settings: HodorSettings):
 
         self.settings = settings
         self.motor_control = MotorControl(settings)
@@ -32,7 +31,6 @@ class Hodor(KineticMapEntity):
         self.tag_family = settings.tag_family
         self.tag_detector: HodorTagDetector | None = None
 
-        self.calibration_type = calibration_type
         self.__status = Status.RESTING
 
         print("""##############################################\n
@@ -40,34 +38,23 @@ class Hodor(KineticMapEntity):
                 ##############################################""")
 
     def setup(self):
-        print("[INFO] Iniciando configuración...")
-
-        ##### PASO 1: Inicializar instancia de cámara #####
         self.camera = HodorCamera(self.settings)
 
-        ##### PASO 2: Calibración #####
-        if self.calibration_type == CalibrationType.SCRATCH:
-            self.camera.calibrate_from_scratch()
-            self.camera.save_calibration("calibration.json")
+        if os.path.exists("calibration.json"):
+            self.camera.load_calibration("calibration.json")
+            print("[INFO] Calibración cargada")
+        else:
+            print("[ERR] calibration.json no encontrado. No es posible comenzar la rutina.")
+            exit()
 
-        if self.calibration_type == CalibrationType.DATASET:
-            self.camera.calibrate_from_dataset()
-            self.camera.save_calibration("calibration.json")
-
-        if self.calibration_type == CalibrationType.LOAD:
-            if os.path.exists("calibration.json"):
-                self.camera.load_calibration("calibration.json")
-            else:
-                print("[WARN] calibration.json no encontrado. Inicializando nueva calibración")
-                self.camera.calibrate_from_scratch()
-
+        # TODO: Inicializar server de transmisión de video acá
         if self.enable_gui:
             self.video_output = HodorVideoOutput(self.camera)
 
-        ##### PASO 3: Inicializar detector de april tags #####
+        # Inicializar detector de april tags
         self.tag_detector = HodorTagDetector(self.camera, self.tag_size, self.tag_family, enable_gui=self.enable_gui)
 
-        print("[INFO] Configuración finalizada")
+        print("[INFO] Inicialización finalizada")
 
     def loop(self):
         print("[INFO] Comenzando rutina...")
@@ -79,24 +66,7 @@ class Hodor(KineticMapEntity):
 
     def set_status(self, status: Status):
         self.__status = status
-        print("[INFO] Status update: " + str(status))
-
-    # def find_april_tags(self) -> List[HodorAprilTag]:
-    #     april_tags = []
-
-    #     while len(april_tags) <= 0:
-    #         april_tags = self.tag_detector.detect_apriltags(self.video_output)
-
-    #         if self.__status != Status.FINDING_TARGET:
-    #             self.set_status(Status.FINDING_TARGET)
-    #             self.turn_right()
-
-    #         if len(april_tags) > 0:
-    #             print(april_tags[0].angle)
-
-    #     self.stop()
-    #     self.set_status(Status.READY_TO_GO)
-    #     return april_tags
+        print("[LOG] Status: " + str(status))
 
     def find_april_tags(self) -> List[HodorAprilTag]:
         april_tags = []
@@ -124,8 +94,8 @@ class Hodor(KineticMapEntity):
         while len(april_tags) <= 0:
             april_tags = self.tag_detector.detect_apriltags(self.video_output)
 
-        print("[LOG] April tag encontrado. Distancia: {}  -  Angulo: {}".format(april_tags[0].relative_distance,
-                                                                                april_tags[0].angle))
+        print("[LOG] April tag detectado (dist: {}mm  |  ang: {}°)".format(april_tags[0].relative_distance,
+                                                                           april_tags[0].angle))
 
         return april_tags[0].relative_distance
 
