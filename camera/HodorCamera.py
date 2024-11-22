@@ -45,8 +45,7 @@ class HodorCamera:
 
     def get_frame(self):
         if not self.__calibration_success:
-            print("[ERR] La cámara debe calibrarse antes de poder ser usada")
-            exit()
+            raise Exception("[ERR] La cámara debe calibrarse antes de poder ser usada")
 
         ret, frame = self.__video_capture.read()
 

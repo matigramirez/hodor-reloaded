@@ -111,15 +111,13 @@ class HodorCameraCalibration:
         cv2.destroyAllWindows()
 
         if proper_calibration_frame_count < 1:
-            print("[ERR] No se encontraron suficientes frames adecuados para la calibración de la cámara")
-            exit()
+            raise Exception("[ERR] No se encontraron suficientes frames adecuados para la calibración de la cámara")
 
         ret, camera_matrix, dist_coeffs, rvecs, tvecs = cv2.calibrateCamera(world_points, plane_points, img_size,
                                                                             None, None)
 
         if not ret:
-            print("[ERR] Ocurrió un error al realizar la calibración")
-            exit()
+            raise Exception("[ERR] Ocurrió un error al realizar la calibración")
 
         self.__camera_matrix = camera_matrix
         self.__dist_coeffs = dist_coeffs

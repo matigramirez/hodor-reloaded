@@ -34,8 +34,7 @@ class Hodor(KineticMapEntity):
             self.camera.load_calibration("calibration.json")
             print("[INFO] Calibración cargada")
         else:
-            print("[ERR] calibration.json no encontrado. No es posible comenzar la rutina.")
-            exit()
+            raise Exception("[ERR] calibration.json no encontrado. No es posible comenzar la rutina.")
 
         self.__scanner = HodorScanner(self.camera, self.settings)
 
