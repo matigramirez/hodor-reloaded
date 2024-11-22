@@ -5,7 +5,6 @@ import numpy as np
 
 from camera.HodorCamera import HodorCamera
 from models.HodorAprilTag import HodorAprilTag
-from output.HodorVideoOutput import HodorVideoOutput
 
 
 class HodorTagDetector:
@@ -16,7 +15,7 @@ class HodorTagDetector:
         self.__tag_size = tag_size
         self.__enable_draw = enable_gui
 
-    def detect_apriltags(self, video_output: HodorVideoOutput | None = None) -> List[HodorAprilTag]:
+    def detect_apriltags(self) -> List[HodorAprilTag]:
         cam_frame = None
 
         # Tomar frame de la cámara
@@ -83,7 +82,8 @@ class HodorTagDetector:
             cv2.imshow('Camera', cam_frame)
             cv2.waitKey(1)
 
-        if video_output is not None:
-            video_output.write(cam_frame)
+        # TODO: Escribir frame para la transmisión acá
+        # if video_output is not None:
+        #     video_output.write(cam_frame)
 
         return results

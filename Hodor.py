@@ -6,10 +6,8 @@ from common.Status import Status
 from control.MotorControl import MotorControl
 from core.KineticMapEntity import KineticMapEntity
 from detection.HodorTagDetector import HodorTagDetector
-from output.HodorVideoOutput import HodorVideoOutput
-from models.HodorAprilTag import HodorAprilTag
+from scanner.HodorScanner import HodorScanner
 from settings.HodorSettings import HodorSettings
-from typing import List
 
 
 class Hodor(KineticMapEntity):
@@ -25,13 +23,12 @@ class Hodor(KineticMapEntity):
         self.frame_width = settings.video_frame_width
         self.frame_height = settings.video_frame_height
         self.enable_gui = settings.video_enable_gui
-        self.video_output: HodorVideoOutput | None = None
 
         self.tag_size = settings.tag_size
         self.tag_family = settings.tag_family
         self.tag_detector: HodorTagDetector | None = None
 
-        self.__status = Status.RESTING
+        self.__status = Status.INITIALIZING
 
         print("""##############################################\n
                 ####           HODOR ft. VI23            #####\n
@@ -47,76 +44,95 @@ class Hodor(KineticMapEntity):
             print("[ERR] calibration.json no encontrado. No es posible comenzar la rutina.")
             exit()
 
-        # TODO: Inicializar server de transmisión de video acá
-        if self.enable_gui:
-            self.video_output = HodorVideoOutput(self.camera)
-
         # Inicializar detector de april tags
         self.tag_detector = HodorTagDetector(self.camera, self.tag_size, self.tag_family, enable_gui=self.enable_gui)
 
         print("[INFO] Inicialización finalizada")
 
     def loop(self):
-        print("[INFO] Comenzando rutina...")
+        print("[INFO] Iniciando rutina")
 
-        self.find_april_tags()
-        self.go_to_target()
+        while True:
+            while self.is_target_reached():
+                self.stop()
+                self.set_status(Status.TARGET_REACHED)
+
+            # Encontrar base
+            while not self.is_target_found():
+                self.find_target()
+                self.set_status(Status.FINDING_TARGET)
+
+                if self.is_target_found():
+                    self.stop()
+                    self.set_status(Status.TARGET_FOUND)
+
+            # Alinearse a la base
+            while not self.is_aligned():
+                self.set_status(Status.ALIGNING_TO_TARGET)
+                self.align_to_target()
+
+                if self.is_aligned():
+                    self.stop()
+                    self.set_status(Status.ALIGNED_TO_TARGET)
+
+                # Si por algún motivo perdí visión de la base, suspendo la alineación y me detengo
+                if not self.is_target_found():
+                    self.stop()
+                    self.set_status(Status.TARGET_LOST)
+                    break
+
+            # Si pierdo visión de la base dejo de moverme
+            if not self.is_target_found():
+                self.stop()
+                self.set_status(Status.TARGET_LOST)
+                continue
+
+            # Moverse hacia la base
+            self.move_towards_target()
+            self.set_status(Status.MOVING_TOWARDS_TARGET)
 
         print("[INFO] Rutina finalizada")
 
     def set_status(self, status: Status):
+        if self.__status == status:
+            return
+
         self.__status = status
         print("[LOG] Status: " + str(status))
 
-    def find_april_tags(self) -> List[HodorAprilTag]:
-        april_tags = []
-        angle = 10000
+    def is_target_reached(self) -> bool:
+        scan = HodorScanner.scan(self.tag_detector)
 
-        while abs(angle) > self.settings.control_tolerance_angular:
-            april_tags = self.tag_detector.detect_apriltags(self.video_output)
+        if scan is None:
+            return False
 
-            if self.__status != Status.FINDING_TARGET:
-                self.set_status(Status.FINDING_TARGET)
-                self.turn_right()
+        return scan.distance <= self.settings.control_tolerance_linear
 
-            if len(april_tags) > 0:
-                angle = april_tags[0].angle
-            else:
-                angle = 10000
+    def is_target_found(self) -> bool:
+        return HodorScanner.scan(self.tag_detector) is not None
 
-        self.stop()
-        self.set_status(Status.READY_TO_GO)
-        return april_tags
+    def is_aligned(self) -> bool:
+        scan = HodorScanner.scan(self.tag_detector)
 
-    def find_distance_to_target(self) -> float:
-        april_tags = []
+        if scan is None:
+            return False
 
-        while len(april_tags) <= 0:
-            april_tags = self.tag_detector.detect_apriltags(self.video_output)
+        return abs(scan.angle) <= self.settings.control_tolerance_angular
 
-        print("[LOG] April tag detectado (dist: {}mm  |  ang: {}°)".format(april_tags[0].relative_distance,
-                                                                           april_tags[0].angle))
+    def find_target(self):
+        self.turn_right()
 
-        return april_tags[0].relative_distance
+    def align_to_target(self):
+        angle = HodorScanner.scan(self.tag_detector).angle
 
-    def go_to_target(self) -> bool:
-        distance = self.find_distance_to_target()
+        if angle < 0:
+            self.turn_left()
+        else:
+            self.turn_right()
 
-        while distance > self.settings.control_tolerance_linear:
-            if self.__status != Status.NAVIGATING:
-                self.move_forward()
-                self.__status = Status.NAVIGATING
-
-            distance = self.find_distance_to_target()
-
-        self.__status = Status.NAVIGATION_COMPLETED
-
-        self.stop()
-        return True
+    def move_towards_target(self):
+        self.move_forward()
 
     def cleanup(self):
         self.camera.close()
         cv2.destroyAllWindows()
-
-        if self.video_output is not None:
-            self.video_output.close()

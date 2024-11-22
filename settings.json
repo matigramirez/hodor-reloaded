@@ -16,7 +16,7 @@
   },
   "control": {
     "tolerance": {
-      "linear": 50,
+      "linear": 400,
       "angular": 7
     }
   },
