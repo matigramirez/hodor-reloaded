@@ -9,9 +9,9 @@ settings = HodorSettings.read_from_file("settings.json")
 hodor = Hodor(settings)
 
 try:
-    hodor.motor_control.stop()
+    hodor.stop()
     hodor.setup()
     hodor.loop()
 finally:
-    hodor.motor_control.stop()
+    hodor.stop()
     hodor.cleanup()

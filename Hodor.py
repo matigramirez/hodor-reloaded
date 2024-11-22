@@ -5,7 +5,6 @@ from camera.HodorCamera import HodorCamera
 from common.Status import Status
 from control.MotorControl import MotorControl
 from core.KineticMapEntity import KineticMapEntity
-from detection.HodorTagDetector import HodorTagDetector
 from scanner.HodorScanner import HodorScanner
 from settings.HodorSettings import HodorSettings
 
@@ -24,9 +23,7 @@ class Hodor(KineticMapEntity):
         self.frame_height = settings.video_frame_height
         self.enable_gui = settings.video_enable_gui
 
-        self.tag_size = settings.tag_size
-        self.tag_family = settings.tag_family
-        self.tag_detector: HodorTagDetector | None = None
+        self.__scanner: HodorScanner | None = None
 
         self.__status = Status.INITIALIZING
 
@@ -40,8 +37,7 @@ class Hodor(KineticMapEntity):
             print("[ERR] calibration.json no encontrado. No es posible comenzar la rutina.")
             exit()
 
-        # Inicializar detector de april tags
-        self.tag_detector = HodorTagDetector(self.camera, self.tag_size, self.tag_family, enable_gui=self.enable_gui)
+        self.__scanner = HodorScanner(self.camera, self.settings)
 
         print("[INFO] Inicialización finalizada")
 
@@ -97,7 +93,7 @@ class Hodor(KineticMapEntity):
         print("[LOG] Status: " + str(status))
 
     def is_target_reached(self) -> bool:
-        scan = HodorScanner.scan(self.tag_detector)
+        scan = self.__scanner.scan()
 
         if scan is None:
             return False
@@ -105,10 +101,10 @@ class Hodor(KineticMapEntity):
         return scan.distance <= self.settings.control_tolerance_linear
 
     def is_target_found(self) -> bool:
-        return HodorScanner.scan(self.tag_detector) is not None
+        return self.__scanner.scan() is not None
 
     def is_aligned(self) -> bool:
-        scan = HodorScanner.scan(self.tag_detector)
+        scan = self.__scanner.scan()
 
         if scan is None:
             return False
@@ -119,7 +115,7 @@ class Hodor(KineticMapEntity):
         self.turn_right()
 
     def align_to_target(self):
-        angle = HodorScanner.scan(self.tag_detector).angle
+        angle = self.__scanner.scan().angle
 
         if angle < 0:
             self.turn_left()

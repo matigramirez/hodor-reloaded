@@ -6,8 +6,13 @@
     "enable_gui": false
   },
   "tag": {
-    "size": 120,
-    "family": "tag36h11"
+    "far_size": 120,
+    "far_id": 1,
+    "close_size": 60,
+    "close_id": 0,
+    "family": "tag36h11",
+    "threshold_distance": 2000,
+    "threshold_sample_size": 5
   },
   "motor": {
     "port": "/dev/ttyACM0",
