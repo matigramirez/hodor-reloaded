@@ -1,21 +1,29 @@
 from control.MotorAction import MotorAction
 from control.MotorControl import MotorControl
-from core.MapEntity import MapEntity
+from control.MotorMode import MotorMode
 
 
-class KineticMapEntity(MapEntity):
+class KineticMapEntity:
 
     def __init__(self, motor_control: MotorControl):
-        super().__init__()
         self.moving = False
         self.__motor_control = motor_control
         self.__current_action: MotorAction = MotorAction.STOP
+        self.__motor_mode = MotorMode.NORMAL
+        self.__mode_changed = False
+
+    def set_motor_mode(self, mode: MotorMode):
+        if mode != self.__motor_mode:
+            self.__mode_changed = True
+
+        self.__motor_mode = mode
 
     def move_forward(self):
         self.moving = True
         print("[INFO] Movimiento -> Avanzando")
 
-        if self.__current_action != MotorAction.FORWARD:
+        if self.__mode_changed or self.__current_action != MotorAction.FORWARD:
+            self.__mode_changed = False
             self.__current_action = MotorAction.FORWARD
             self.__motor_control.forward()
 
@@ -23,7 +31,8 @@ class KineticMapEntity(MapEntity):
         self.moving = False
         print("[INFO] Movimiento -> Detenido")
 
-        if self.__current_action != MotorAction.STOP:
+        if self.__mode_changed or self.__current_action != MotorAction.STOP:
+            self.__mode_changed = False
             self.__current_action = MotorAction.STOP
             self.__motor_control.stop()
 
@@ -31,7 +40,8 @@ class KineticMapEntity(MapEntity):
         self.moving = True
         print("[INFO] Movimiento -> Giro Izquierda")
 
-        if self.__current_action != MotorAction.LEFT:
+        if self.__mode_changed or self.__current_action != MotorAction.LEFT:
+            self.__mode_changed = False
             self.__current_action = MotorAction.LEFT
             self.__motor_control.turn_left()
 
@@ -39,6 +49,7 @@ class KineticMapEntity(MapEntity):
         self.moving = True
         print("[INFO] Movimiento -> Giro Derecha")
 
-        if self.__current_action != MotorAction.RIGHT:
+        if self.__mode_changed or self.__current_action != MotorAction.RIGHT:
+            self.__mode_changed = False
             self.__current_action = MotorAction.RIGHT
             self.__motor_control.turn_right()

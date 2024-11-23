@@ -26,13 +26,33 @@
     }
   },
   "movement": {
-    "forward_speed_right": 128,
-    "forward_speed_left": 153,
-    "backwards_speed_right": 127,
-    "backwards_speed_left": 112,
-    "turn_right_speed_right": 218,
-    "turn_right_speed_left": 37,
-    "turn_left_speed_right": 52,
-    "turn_left_speed_left": 203
+    "normal": {
+      "forward": {
+        "speed_right": 128,
+        "speed_left": 153
+      },
+      "turn_right": {
+        "speed_right": 218,
+        "speed_left": 37
+      },
+      "turn_left": {
+        "speed_right": 52,
+        "speed_left": 203
+      }
+    },
+    "slow": {
+      "forward": {
+        "speed_right": 128,
+        "speed_left": 153
+      },
+      "turn_right": {
+        "speed_right": 218,
+        "speed_left": 37
+      },
+      "turn_left": {
+        "speed_right": 52,
+        "speed_left": 203
+      }
+    }
   }
 }
