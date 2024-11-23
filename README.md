@@ -15,18 +15,21 @@ a los Vehículos Inteligentes en el cual se hace uso del robot Hodor.
 
 ### Debian
 
-Debe instalarse el paquete `python3-opencv` mediante `apt`:
+Deben instalarse los siguientes paquetes mediante `apt`:
 
-- `sudo apt install python3-opencv`
+- `python3-opencv`
+- `termcolor`
+
+Ejemplo: `sudo apt install nombre_del_paquete`
 
 ### Python
 
 Deben instalarse los siguientes paquetes mediante `pip`:
 
-- pyserial
-- python-opencv
-- pyapriltags
-- numpy
+- `pyserial`
+- `pyapriltags`
+- `numpy`
+- `opencv-python`
 
 Ejemplo: `pip install nombre_del_paquete`
 
