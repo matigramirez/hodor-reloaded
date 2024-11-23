@@ -30,7 +30,7 @@ class Hodor(KineticMapEntity):
     def setup(self):
         self.camera = HodorCamera(self.settings)
 
-        if os.path.exists("calibration.json"):
+        if os.path.exists("../calibration.json"):
             self.camera.load_calibration("calibration.json")
             print("[INFO] Calibración cargada")
         else:

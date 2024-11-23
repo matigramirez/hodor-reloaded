@@ -1,4 +1,4 @@
-from Hodor import Hodor
+from core.Hodor import Hodor
 from settings.HodorSettings import HodorSettings
 
 print("##############################################")
