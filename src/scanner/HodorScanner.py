@@ -4,6 +4,7 @@ from scanner.ScanResult import ScanResult
 from settings.HodorSettings import HodorSettings
 from collections import deque
 from statistics import mean
+from console.HodorLogger import HodorLogger
 
 
 class HodorScanner:
@@ -35,7 +36,7 @@ class HodorScanner:
         distance = april_tags[0].distance
         angle = april_tags[0].angle
 
-        print("[LOG] April tag detectado [{}] (dist: {}mm  |  ang: {}°)".format(
+        HodorLogger.log("April tag detectado [{}] (dist: {}mm  |  ang: {}°)".format(
             "corto alcance" if self.__is_nearby else "largo alcance", distance, angle))
 
         return ScanResult(distance, angle)
@@ -51,10 +52,10 @@ class HodorScanner:
                 self.tag_detector = self.__close_tag_detector
                 self.__latest_samples.clear()
                 self.__is_nearby = True
-                print("[INFO] Cambiando a detector de largo alcance")
+                HodorLogger.info("Cambiando a detector de largo alcance")
         else:
             if self.__is_nearby:
                 self.tag_detector = self.__far_tag_detector
                 self.__latest_samples.clear()
                 self.__is_nearby = False
-                print("[INFO] Cambiando a detector de corto alcance")
+                HodorLogger.info("Cambiando a detector de corto alcance")

@@ -2,6 +2,8 @@ import json
 import codecs
 import os
 
+from console.HodorLogger import HodorLogger
+
 
 class HodorSettings:
     def __init__(self):
@@ -49,7 +51,8 @@ class HodorSettings:
         settings = HodorSettings()
 
         if not os.path.exists(file_path):
-            print("[WARN] No se pudo encontrar el archivo " + file_path + ". Se utilizará la configuración por defecto")
+            HodorLogger.warning(
+                "No se pudo encontrar el archivo " + file_path + ". Se utilizará la configuración por defecto")
             return settings
 
         settings_json_str = codecs.open(file_path, 'r', encoding='utf-8').read()
@@ -82,7 +85,8 @@ class HodorSettings:
         # Movement
         settings.movement_normal_forward_speed_right = settings_json["movement"]["normal"]["forward"]["speed_right"]
         settings.movement_normal_forward_speed_left = settings_json["movement"]["normal"]["forward"]["speed_left"]
-        settings.movement_normal_turn_right_speed_right = settings_json["movement"]["normal"]["turn_right"]["speed_right"]
+        settings.movement_normal_turn_right_speed_right = settings_json["movement"]["normal"]["turn_right"][
+            "speed_right"]
         settings.movement_normal_turn_right_speed_left = settings_json["movement"]["normal"]["turn_right"]["speed_left"]
         settings.movement_normal_turn_left_speed_right = settings_json["movement"]["normal"]["turn_left"]["speed_right"]
         settings.movement_normal_turn_left_speed_left = settings_json["movement"]["normal"]["turn_left"]["speed_left"]
@@ -94,6 +98,6 @@ class HodorSettings:
         settings.movement_slow_turn_left_speed_right = settings_json["movement"]["slow"]["turn_left"]["speed_right"]
         settings.movement_slow_turn_left_speed_left = settings_json["movement"]["slow"]["turn_left"]["speed_left"]
 
-        print("[INFO] Settings cargadas")
+        HodorLogger.info("Settings cargadas")
 
         return settings

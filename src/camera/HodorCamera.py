@@ -4,6 +4,7 @@ import json
 import codecs
 
 from settings.HodorSettings import HodorSettings
+from console.HodorLogger import HodorLogger
 
 
 class HodorCamera:
@@ -35,9 +36,9 @@ class HodorCamera:
         self.__set_parameters_from_matrix__()
         self.__calibration_success = True
 
-        print("[INFO] Calibración cargada exitosamente. Parámetros de cámara:")
-        print("f: ({}, {})".format(self.__fx, self.__fy))
-        print("c: ({}, {})".format(self.__cx, self.__cy))
+        HodorLogger.info("Calibración cargada exitosamente. Parámetros de cámara:")
+        HodorLogger.info("f: ({}, {})".format(self.__fx, self.__fy))
+        HodorLogger.info("c: ({}, {})".format(self.__cx, self.__cy))
 
     def get_parameters(self):
         if self.__calibration_success:

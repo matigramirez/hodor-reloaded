@@ -2,6 +2,7 @@ from serial import Serial
 
 from control.MotorMode import MotorMode
 from settings.HodorSettings import HodorSettings
+from console.HodorLogger import HodorLogger
 
 
 class MotorControl:
@@ -14,11 +15,11 @@ class MotorControl:
         self.__command_start: int = int(ord("X"))
 
         if not self.settings.motor_enable_movement:
-            print("[INFO] Control de motores deshabilitado. Conexión serial no inicializada.")
+            HodorLogger.info("Control de motores deshabilitado. Conexión serial no inicializada.")
             return
 
         self.serial = Serial(settings.motor_port, settings.motor_baudrate)
-        print("[INFO] Conectado al puerto serial " + settings.motor_port + " con " + str(
+        HodorLogger.info("Conectado al puerto serial " + settings.motor_port + " con " + str(
             settings.motor_baudrate) + " baudrate")
 
     def set_mode(self, mode: MotorMode):

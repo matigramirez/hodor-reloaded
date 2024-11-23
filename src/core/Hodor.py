@@ -7,6 +7,7 @@ from control.MotorControl import MotorControl
 from core.KineticMapEntity import KineticMapEntity
 from scanner.HodorScanner import HodorScanner
 from settings.HodorSettings import HodorSettings
+from console.HodorLogger import HodorLogger
 
 
 class Hodor(KineticMapEntity):
@@ -30,18 +31,18 @@ class Hodor(KineticMapEntity):
     def setup(self):
         self.camera = HodorCamera(self.settings)
 
-        if os.path.exists("../calibration.json"):
+        if os.path.exists("calibration.json"):
             self.camera.load_calibration("calibration.json")
-            print("[INFO] Calibración cargada")
+            HodorLogger.info("Calibración cargada")
         else:
-            raise Exception("[ERR] calibration.json no encontrado. No es posible comenzar la rutina.")
+            raise Exception("calibration.json no encontrado. No es posible comenzar la rutina.")
 
         self.__scanner = HodorScanner(self.camera, self.settings)
 
-        print("[INFO] Inicialización finalizada")
+        HodorLogger.info("Inicialización finalizada")
 
     def loop(self):
-        print("[INFO] Iniciando rutina")
+        HodorLogger.info("Iniciando rutina")
 
         while True:
             while self.is_target_reached():
@@ -82,14 +83,14 @@ class Hodor(KineticMapEntity):
             self.move_towards_target()
             self.set_status(Status.MOVING_TOWARDS_TARGET)
 
-        print("[INFO] Rutina finalizada")
+        HodorLogger.info("Rutina finalizada")
 
     def set_status(self, status: Status):
         if self.__status == status:
             return
 
         self.__status = status
-        print("[LOG] Status: " + str(status))
+        HodorLogger.log("Status: " + str(status))
 
     def is_target_reached(self) -> bool:
         scan = self.__scanner.scan()

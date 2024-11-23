@@ -1,9 +1,10 @@
 from core.Hodor import Hodor
 from settings.HodorSettings import HodorSettings
+from console.HodorLogger import HodorLogger
 
-print("##############################################")
-print("####           HODOR ft. VI23            #####")
-print("##############################################")
+HodorLogger.init("##############################################")
+HodorLogger.init("####           HODOR ft. VI23            #####")
+HodorLogger.init("##############################################")
 
 settings = HodorSettings.read_from_file("settings.json")
 hodor = Hodor(settings)
