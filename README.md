@@ -61,4 +61,6 @@ El procedimiento consiste en 3 acciones principales:
 
 #### Diagrama de flujo - Rutina de movimiento
 
-[![Diagrama de flujo](docs/assets/alcanzar-objetivo_diagrama-de-flujo.svg) ""](docs/assets/alcanzar-objetivo_diagrama-de-flujo.svg)
+<p align="center">
+  <img alt="Diagrama de flujo - Rutina de movimiento" src="docs/assets/alcanzar-objetivo_diagrama-de-flujo.svg" />
+</p>
