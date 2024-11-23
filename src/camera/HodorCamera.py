@@ -36,9 +36,9 @@ class HodorCamera:
         self.__set_parameters_from_matrix__()
         self.__calibration_success = True
 
-        HodorLogger.info("Calibración cargada exitosamente. Parámetros de cámara:")
-        HodorLogger.info("f: ({}, {})".format(self.__fx, self.__fy))
-        HodorLogger.info("c: ({}, {})".format(self.__cx, self.__cy))
+        HodorLogger.info("Calibración cargada exitosamente")
+        HodorLogger.log("f: ({}, {})".format(self.__fx, self.__fy))
+        HodorLogger.log("c: ({}, {})".format(self.__cx, self.__cy))
 
     def get_parameters(self):
         if self.__calibration_success:
@@ -46,7 +46,7 @@ class HodorCamera:
 
     def get_frame(self):
         if not self.__calibration_success:
-            raise Exception("[ERR] La cámara debe calibrarse antes de poder ser usada")
+            raise Exception("La cámara debe calibrarse antes de poder ser usada")
 
         ret, frame = self.__video_capture.read()
 

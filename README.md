@@ -18,7 +18,6 @@ a los Vehículos Inteligentes en el cual se hace uso del robot Hodor.
 Deben instalarse los siguientes paquetes mediante `apt`:
 
 - `python3-opencv`
-- `termcolor`
 
 Ejemplo: `sudo apt install nombre_del_paquete`
 
@@ -30,6 +29,7 @@ Deben instalarse los siguientes paquetes mediante `pip`:
 - `pyapriltags`
 - `numpy`
 - `opencv-python`
+- `termcolor`
 
 Ejemplo: `pip install nombre_del_paquete`
 

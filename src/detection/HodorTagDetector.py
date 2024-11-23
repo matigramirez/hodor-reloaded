@@ -1,5 +1,6 @@
-from pyapriltags import Detector
 import cv2
+
+from pyapriltags import Detector
 from typing import List
 import numpy as np
 
