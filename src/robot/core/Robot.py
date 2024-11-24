@@ -34,7 +34,6 @@ class Robot(ABC, KineticMapEntity):
 
         if os.path.exists("calibration.json"):
             self.camera.load_calibration("calibration.json")
-            RobotLogger.info("Calibración cargada")
         else:
             raise Exception("calibration.json no encontrado. No es posible comenzar la rutina.")
 

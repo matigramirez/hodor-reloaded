@@ -15,44 +15,12 @@
     "threshold_sample_size": 5
   },
   "motor": {
-    "port": "/dev/ttyACM0",
-    "baudrate": 9600,
     "enable_movement": false
   },
   "control": {
     "tolerance": {
       "linear": 400,
       "angular": 7
-    }
-  },
-  "movement": {
-    "normal": {
-      "forward": {
-        "speed_right": 128,
-        "speed_left": 153
-      },
-      "turn_right": {
-        "speed_right": 218,
-        "speed_left": 37
-      },
-      "turn_left": {
-        "speed_right": 52,
-        "speed_left": 203
-      }
-    },
-    "slow": {
-      "forward": {
-        "speed_right": 128,
-        "speed_left": 153
-      },
-      "turn_right": {
-        "speed_right": 218,
-        "speed_left": 37
-      },
-      "turn_left": {
-        "speed_right": 52,
-        "speed_left": 203
-      }
     }
   }
 }

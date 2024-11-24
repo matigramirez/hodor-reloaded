@@ -1,0 +1,36 @@
+{
+  "motor": {
+    "port": "/dev/ttyACM0",
+    "baud_rate": 9600
+  },
+  "movement": {
+    "normal": {
+      "forward": {
+        "speed_right": 128,
+        "speed_left": 153
+      },
+      "turn_right": {
+        "speed_right": 218,
+        "speed_left": 37
+      },
+      "turn_left": {
+        "speed_right": 52,
+        "speed_left": 203
+      }
+    },
+    "slow": {
+      "forward": {
+        "speed_right": 128,
+        "speed_left": 153
+      },
+      "turn_right": {
+        "speed_right": 218,
+        "speed_left": 37
+      },
+      "turn_left": {
+        "speed_right": 52,
+        "speed_left": 203
+      }
+    }
+  }
+}

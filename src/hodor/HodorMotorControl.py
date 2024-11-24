@@ -1,5 +1,6 @@
 from serial import Serial
 
+from hodor.HodorSettings import HodorSettings
 from robot.control.MotorControl import MotorControl
 from robot.control.MovementMode import MovementMode
 from robot.settings.RobotSettings import RobotSettings
@@ -7,24 +8,25 @@ from robot.console.RobotLogger import RobotLogger
 
 
 class HodorMotorControl(MotorControl):
-    def __init__(self, settings: RobotSettings):
+    def __init__(self, robot_settings: RobotSettings, hodor_settings: HodorSettings):
         super().__init__()
 
-        self.settings = settings
+        self.robot_settings = robot_settings
+        self.settings = hodor_settings
         self.serial: Serial | None = None
         # Caracter 'X' que indica el inicio de un comando para la velocidad de los motores
         self.__command_start: int = int(ord("X"))
 
-        if not settings.motor_enable_movement:
-            RobotLogger.info("Control de motores deshabilitado. Conexión serial no inicializada.")
+        if not robot_settings.motor_enable_movement:
+            RobotLogger.warning("Control de motores deshabilitado. Conexión serial no inicializada.")
             return
 
-        self.serial = Serial(settings.motor_port, settings.motor_baudrate)
-        RobotLogger.info("Conectado al puerto serial " + settings.motor_port + " con " + str(
-            settings.motor_baudrate) + " baudrate")
+        self.serial = Serial(self.settings.motor_port, self.settings.motor_baud_rate)
+        RobotLogger.info("Conectado al puerto serial " + self.settings.motor_port + " con " + str(
+            self.settings.motor_baud_rate) + " baudrate")
 
     def __send_movement__(self, right_speed: int, left_speed: int):
-        if not self.settings.motor_enable_movement:
+        if not self.robot_settings.motor_enable_movement:
             return
 
         # Mismo "hack" que tenía el robot para evitar convertir la velocidad 0xA en el caracter \n
@@ -46,11 +48,11 @@ class HodorMotorControl(MotorControl):
         self.serial.write(command)
 
     def stop(self):
-        if self.settings.motor_enable_movement:
+        if self.robot_settings.motor_enable_movement:
             self.__send_movement__(0, 0)
 
     def forward(self):
-        if self.settings.motor_enable_movement:
+        if self.robot_settings.motor_enable_movement:
             if self.__mode == MovementMode.SLOW:
                 self.__send_movement__(self.settings.movement_slow_forward_speed_right,
                                        self.settings.movement_slow_forward_speed_left)
@@ -59,7 +61,7 @@ class HodorMotorControl(MotorControl):
                                        self.settings.movement_normal_forward_speed_left)
 
     def turn_right(self):
-        if self.settings.motor_enable_movement:
+        if self.robot_settings.motor_enable_movement:
             if self.__mode == MovementMode.SLOW:
                 self.__send_movement__(self.settings.movement_slow_turn_right_speed_right,
                                        self.settings.movement_slow_turn_right_speed_left)
@@ -68,7 +70,7 @@ class HodorMotorControl(MotorControl):
                                        self.settings.movement_normal_turn_right_speed_left)
 
     def turn_left(self):
-        if self.settings.motor_enable_movement:
+        if self.robot_settings.motor_enable_movement:
             if self.__mode == MovementMode.SLOW:
                 self.__send_movement__(self.settings.movement_slow_turn_left_speed_right,
                                        self.settings.movement_slow_turn_left_speed_right)
