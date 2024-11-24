@@ -89,7 +89,12 @@ class Robot(ABC, KineticMapEntity):
         self.turn_right()
 
     def align_to_target(self):
-        angle = self.__scanner.scan().angle
+        scan = self.__scanner.scan()
+
+        if scan is None:
+            return
+
+        angle = scan.angle
 
         if angle < 0:
             self.turn_left()

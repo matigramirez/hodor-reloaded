@@ -22,11 +22,11 @@ class RobotTagDetector:
         self.__target_tag_id = tag_id
 
     def detect_apriltags(self) -> List[AprilTagEntity]:
-        cam_frame = None
-
         # Tomar frame de la cámara
-        while cam_frame is None:
-            cam_frame = self.__camera.get_frame()
+        cam_frame = self.__camera.get_frame()
+
+        if cam_frame is None:
+            return []
 
         # Convertir frame a escala de grises
         grayscale_img = cv2.cvtColor(cam_frame, cv2.COLOR_BGR2GRAY)

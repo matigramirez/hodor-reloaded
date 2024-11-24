@@ -20,37 +20,33 @@ class KineticMapEntity:
         self.__motor_mode = mode
 
     def move_forward(self):
-        self.moving = True
-        RobotLogger.info("Movimiento -> Avanzando")
-
         if self.__mode_changed or self.__current_action != MotorAction.FORWARD:
+            self.moving = True
+            RobotLogger.log("Movimiento -> Avanzando")
             self.__mode_changed = False
             self.__current_action = MotorAction.FORWARD
             self.__motor_control.forward()
 
     def stop(self):
-        self.moving = False
-        RobotLogger.info("Movimiento -> Detenido")
-
         if self.__mode_changed or self.__current_action != MotorAction.STOP:
+            self.moving = False
+            RobotLogger.log("Movimiento -> Detenido")
             self.__mode_changed = False
             self.__current_action = MotorAction.STOP
             self.__motor_control.stop()
 
     def turn_left(self):
-        self.moving = True
-        RobotLogger.info("Movimiento -> Giro Izquierda")
-
         if self.__mode_changed or self.__current_action != MotorAction.LEFT:
+            self.moving = True
+            RobotLogger.log("Movimiento -> Giro Izquierda")
             self.__mode_changed = False
             self.__current_action = MotorAction.LEFT
             self.__motor_control.turn_left()
 
     def turn_right(self):
-        self.moving = True
-        RobotLogger.info("Movimiento -> Giro Derecha")
-
         if self.__mode_changed or self.__current_action != MotorAction.RIGHT:
+            self.moving = True
+            RobotLogger.log("Movimiento -> Giro Derecha")
             self.__mode_changed = False
             self.__current_action = MotorAction.RIGHT
             self.__motor_control.turn_right()

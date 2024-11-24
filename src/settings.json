@@ -2,8 +2,7 @@
   "video": {
     "device_id": 8,
     "frame_width": 1280,
-    "frame_height": 720,
-    "enable_gui": false
+    "frame_height": 720
   },
   "tag": {
     "far_size": 120,
