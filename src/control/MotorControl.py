@@ -1,12 +1,12 @@
 from serial import Serial
 
 from control.MotorMode import MotorMode
-from settings.HodorSettings import HodorSettings
-from console.HodorLogger import HodorLogger
+from settings.RobotSettings import RobotSettings
+from console.RobotLogger import RobotLogger
 
 
 class MotorControl:
-    def __init__(self, settings: HodorSettings):
+    def __init__(self, settings: RobotSettings):
         self.settings = settings
         self.serial: Serial | None = None
         self.__mode: MotorMode = MotorMode.NORMAL
@@ -15,11 +15,11 @@ class MotorControl:
         self.__command_start: int = int(ord("X"))
 
         if not self.settings.motor_enable_movement:
-            HodorLogger.info("Control de motores deshabilitado. Conexión serial no inicializada.")
+            RobotLogger.info("Control de motores deshabilitado. Conexión serial no inicializada.")
             return
 
         self.serial = Serial(settings.motor_port, settings.motor_baudrate)
-        HodorLogger.info("Conectado al puerto serial " + settings.motor_port + " con " + str(
+        RobotLogger.info("Conectado al puerto serial " + settings.motor_port + " con " + str(
             settings.motor_baudrate) + " baudrate")
 
     def set_mode(self, mode: MotorMode):

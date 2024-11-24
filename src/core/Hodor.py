@@ -1,17 +1,17 @@
 import cv2
 import os
 
-from camera.HodorCamera import HodorCamera
+from camera.RobotCamera import RobotCamera
 from common.Status import Status
 from control.MotorControl import MotorControl
 from core.KineticMapEntity import KineticMapEntity
-from scanner.HodorScanner import HodorScanner
-from settings.HodorSettings import HodorSettings
-from console.HodorLogger import HodorLogger
+from scanner.RobotScanner import RobotScanner
+from settings.RobotSettings import RobotSettings
+from console.RobotLogger import RobotLogger
 
 
 class Hodor(KineticMapEntity):
-    def __init__(self, settings: HodorSettings):
+    def __init__(self, settings: RobotSettings):
 
         self.settings = settings
         self.motor_control = MotorControl(settings)
@@ -24,25 +24,25 @@ class Hodor(KineticMapEntity):
         self.frame_height = settings.video_frame_height
         self.enable_gui = settings.video_enable_gui
 
-        self.__scanner: HodorScanner | None = None
+        self.__scanner: RobotScanner | None = None
 
         self.__status = Status.INITIALIZING
 
     def setup(self):
-        self.camera = HodorCamera(self.settings)
+        self.camera = RobotCamera(self.settings)
 
         if os.path.exists("calibration.json"):
             self.camera.load_calibration("calibration.json")
-            HodorLogger.info("Calibración cargada")
+            RobotLogger.info("Calibración cargada")
         else:
             raise Exception("calibration.json no encontrado. No es posible comenzar la rutina.")
 
-        self.__scanner = HodorScanner(self.camera, self.settings)
+        self.__scanner = RobotScanner(self.camera, self.settings)
 
-        HodorLogger.info("Inicialización finalizada")
+        RobotLogger.info("Inicialización finalizada")
 
     def loop(self):
-        HodorLogger.info("Iniciando rutina")
+        RobotLogger.info("Iniciando rutina")
 
         while True:
             while self.is_target_reached():
@@ -83,14 +83,14 @@ class Hodor(KineticMapEntity):
             self.move_towards_target()
             self.set_status(Status.MOVING_TOWARDS_TARGET)
 
-        HodorLogger.info("Rutina finalizada")
+        RobotLogger.info("Rutina finalizada")
 
     def set_status(self, status: Status):
         if self.__status == status:
             return
 
         self.__status = status
-        HodorLogger.log("Status: " + str(status))
+        RobotLogger.log("Status: " + str(status))
 
     def is_target_reached(self) -> bool:
         scan = self.__scanner.scan()

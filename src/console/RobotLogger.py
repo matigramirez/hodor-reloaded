@@ -1,7 +1,7 @@
 from termcolor import colored
 
 
-class HodorLogger:
+class RobotLogger:
     @staticmethod
     def init(message: str):
         print(colored(message, 'dark_grey'))

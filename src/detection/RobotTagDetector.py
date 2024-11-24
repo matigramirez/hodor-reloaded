@@ -4,12 +4,12 @@ from pyapriltags import Detector
 from typing import List
 import numpy as np
 
-from camera.HodorCamera import HodorCamera
-from models.HodorAprilTag import HodorAprilTag
+from camera.RobotCamera import RobotCamera
+from models.AprilTagEntity import AprilTagEntity
 
 
-class HodorTagDetector:
-    def __init__(self, camera: HodorCamera, tag_family: str, tag_size: int, tag_id: int, enable_gui: bool = False):
+class RobotTagDetector:
+    def __init__(self, camera: RobotCamera, tag_family: str, tag_size: int, tag_id: int, enable_gui: bool = False):
         self.__detector = Detector(families=tag_family)
         self.__camera = camera
         self.__fx, self.__fy, self.__cx, self.__cy = camera.get_parameters()
@@ -17,7 +17,7 @@ class HodorTagDetector:
         self.__target_tag_id = tag_id
         self.__enable_draw = enable_gui
 
-    def detect_apriltags(self) -> List[HodorAprilTag]:
+    def detect_apriltags(self) -> List[AprilTagEntity]:
         cam_frame = None
 
         # Tomar frame de la cámara
@@ -78,7 +78,7 @@ class HodorTagDetector:
                 cv2.putText(cam_frame, "ang: {0:.2f}°".format(angle_deg), (p1[0], p1[1] + 15),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 2)
 
-            results.append(HodorAprilTag(detection.tag_id, distance, angle_deg))
+            results.append(AprilTagEntity(detection.tag_id, distance, angle_deg))
 
             # TODO: Escribir frame para la transmisión acá
             # draw(cam_frame)

@@ -1,10 +1,10 @@
-from calibration.HodorCameraCalibration import HodorCameraCalibration
-from settings.HodorSettings import HodorSettings
+from calibration.RobotCameraCalibration import RobotCameraCalibration
+from settings.RobotSettings import RobotSettings
 
-settings = HodorSettings()
+settings = RobotSettings()
 settings.read_from_file("settings.json")
 
-camera_calibration = HodorCameraCalibration(settings)
+camera_calibration = RobotCameraCalibration(settings)
 
 camera_calibration.calibrate_from_scratch()
 

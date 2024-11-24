@@ -1,12 +1,12 @@
 from core.Hodor import Hodor
-from settings.HodorSettings import HodorSettings
-from console.HodorLogger import HodorLogger
+from settings.RobotSettings import RobotSettings
+from console.RobotLogger import RobotLogger
 
-HodorLogger.init("##############################################")
-HodorLogger.init("####           HODOR ft. VI23            #####")
-HodorLogger.init("##############################################")
+RobotLogger.init("##############################################")
+RobotLogger.init("####           HODOR ft. VI23            #####")
+RobotLogger.init("##############################################")
 
-settings = HodorSettings.read_from_file("settings.json")
+settings = RobotSettings.read_from_file("settings.json")
 hodor = Hodor(settings)
 
 try:

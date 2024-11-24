@@ -4,11 +4,11 @@ import glob
 import os
 import json
 
-from settings.HodorSettings import HodorSettings
+from settings.RobotSettings import RobotSettings
 
 
-class HodorCameraCalibration:
-    def __init__(self, settings: HodorSettings):
+class RobotCameraCalibration:
+    def __init__(self, settings: RobotSettings):
         self.__video_id = settings.video_device_id
         self.__video_capture = cv2.VideoCapture(settings.video_device_id)
         self.__video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, settings.video_frame_width)

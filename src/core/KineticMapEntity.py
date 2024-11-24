@@ -1,7 +1,7 @@
 from control.MotorAction import MotorAction
 from control.MotorControl import MotorControl
 from control.MotorMode import MotorMode
-from console.HodorLogger import HodorLogger
+from console.RobotLogger import RobotLogger
 
 
 class KineticMapEntity:
@@ -21,7 +21,7 @@ class KineticMapEntity:
 
     def move_forward(self):
         self.moving = True
-        HodorLogger.info("Movimiento -> Avanzando")
+        RobotLogger.info("Movimiento -> Avanzando")
 
         if self.__mode_changed or self.__current_action != MotorAction.FORWARD:
             self.__mode_changed = False
@@ -30,7 +30,7 @@ class KineticMapEntity:
 
     def stop(self):
         self.moving = False
-        HodorLogger.info("Movimiento -> Detenido")
+        RobotLogger.info("Movimiento -> Detenido")
 
         if self.__mode_changed or self.__current_action != MotorAction.STOP:
             self.__mode_changed = False
@@ -39,7 +39,7 @@ class KineticMapEntity:
 
     def turn_left(self):
         self.moving = True
-        HodorLogger.info("Movimiento -> Giro Izquierda")
+        RobotLogger.info("Movimiento -> Giro Izquierda")
 
         if self.__mode_changed or self.__current_action != MotorAction.LEFT:
             self.__mode_changed = False
@@ -48,7 +48,7 @@ class KineticMapEntity:
 
     def turn_right(self):
         self.moving = True
-        HodorLogger.info("Movimiento -> Giro Derecha")
+        RobotLogger.info("Movimiento -> Giro Derecha")
 
         if self.__mode_changed or self.__current_action != MotorAction.RIGHT:
             self.__mode_changed = False

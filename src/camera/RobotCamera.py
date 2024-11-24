@@ -3,12 +3,12 @@ import numpy as np
 import json
 import codecs
 
-from settings.HodorSettings import HodorSettings
-from console.HodorLogger import HodorLogger
+from settings.RobotSettings import RobotSettings
+from console.RobotLogger import RobotLogger
 
 
-class HodorCamera:
-    def __init__(self, settings: HodorSettings):
+class RobotCamera:
+    def __init__(self, settings: RobotSettings):
         self.__video_id = settings.video_device_id
         self.__video_capture = cv2.VideoCapture(settings.video_device_id)
         self.__video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, settings.video_frame_width)
@@ -36,9 +36,9 @@ class HodorCamera:
         self.__set_parameters_from_matrix__()
         self.__calibration_success = True
 
-        HodorLogger.info("Calibración cargada exitosamente")
-        HodorLogger.log("f: ({}, {})".format(self.__fx, self.__fy))
-        HodorLogger.log("c: ({}, {})".format(self.__cx, self.__cy))
+        RobotLogger.info("Calibración cargada exitosamente")
+        RobotLogger.log("f: ({}, {})".format(self.__fx, self.__fy))
+        RobotLogger.log("c: ({}, {})".format(self.__cx, self.__cy))
 
     def get_parameters(self):
         if self.__calibration_success:

@@ -2,10 +2,10 @@ import json
 import codecs
 import os
 
-from console.HodorLogger import HodorLogger
+from console.RobotLogger import RobotLogger
 
 
-class HodorSettings:
+class RobotSettings:
     def __init__(self):
         # Video
         self.video_device_id: int = 8
@@ -48,10 +48,10 @@ class HodorSettings:
 
     @staticmethod
     def read_from_file(file_path: str):
-        settings = HodorSettings()
+        settings = RobotSettings()
 
         if not os.path.exists(file_path):
-            HodorLogger.warning(
+            RobotLogger.warning(
                 "No se pudo encontrar el archivo " + file_path + ". Se utilizará la configuración por defecto")
             return settings
 
@@ -98,6 +98,6 @@ class HodorSettings:
         settings.movement_slow_turn_left_speed_right = settings_json["movement"]["slow"]["turn_left"]["speed_right"]
         settings.movement_slow_turn_left_speed_left = settings_json["movement"]["slow"]["turn_left"]["speed_left"]
 
-        HodorLogger.info("Settings cargadas")
+        RobotLogger.info("Settings cargadas")
 
         return settings

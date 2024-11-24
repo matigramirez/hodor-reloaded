@@ -1,21 +1,21 @@
-from camera.HodorCamera import HodorCamera
-from detection.HodorTagDetector import HodorTagDetector
+from camera.RobotCamera import RobotCamera
+from detection.RobotTagDetector import RobotTagDetector
 from scanner.ScanResult import ScanResult
-from settings.HodorSettings import HodorSettings
+from settings.RobotSettings import RobotSettings
 from collections import deque
 from statistics import mean
-from console.HodorLogger import HodorLogger
+from console.RobotLogger import RobotLogger
 
 
-class HodorScanner:
-    def __init__(self, camera: HodorCamera, settings: HodorSettings):
+class RobotScanner:
+    def __init__(self, camera: RobotCamera, settings: RobotSettings):
         self.settings = settings
 
-        self.__far_tag_detector = HodorTagDetector(camera, settings.tag_family, settings.tag_far_size,
+        self.__far_tag_detector = RobotTagDetector(camera, settings.tag_family, settings.tag_far_size,
                                                    settings.tag_far_id,
                                                    enable_gui=settings.video_enable_gui)
 
-        self.__close_tag_detector = HodorTagDetector(camera, settings.tag_family, settings.tag_close_size,
+        self.__close_tag_detector = RobotTagDetector(camera, settings.tag_family, settings.tag_close_size,
                                                      settings.tag_close_id,
                                                      enable_gui=settings.video_enable_gui)
 
@@ -36,7 +36,7 @@ class HodorScanner:
         distance = april_tags[0].distance
         angle = april_tags[0].angle
 
-        HodorLogger.log("April tag detectado [{}] (dist: {}mm  |  ang: {}°)".format(
+        RobotLogger.log("April tag detectado [{}] (dist: {}mm  |  ang: {}°)".format(
             "corto alcance" if self.__is_nearby else "largo alcance", distance, angle))
 
         return ScanResult(distance, angle)
@@ -52,10 +52,10 @@ class HodorScanner:
                 self.tag_detector = self.__close_tag_detector
                 self.__latest_samples.clear()
                 self.__is_nearby = True
-                HodorLogger.info("Cambiando a detector de largo alcance")
+                RobotLogger.info("Cambiando a detector de largo alcance")
         else:
             if self.__is_nearby:
                 self.tag_detector = self.__far_tag_detector
                 self.__latest_samples.clear()
                 self.__is_nearby = False
-                HodorLogger.info("Cambiando a detector de corto alcance")
+                RobotLogger.info("Cambiando a detector de corto alcance")
