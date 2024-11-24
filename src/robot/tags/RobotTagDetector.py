@@ -4,8 +4,8 @@ from pyapriltags import Detector
 from typing import List
 import numpy as np
 
-from camera.RobotCamera import RobotCamera
-from models.AprilTagEntity import AprilTagEntity
+from robot.camera.RobotCamera import RobotCamera
+from robot.models.AprilTagEntity import AprilTagEntity
 
 
 class RobotTagDetector:

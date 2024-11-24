@@ -2,7 +2,7 @@ import json
 import codecs
 import os
 
-from console.RobotLogger import RobotLogger
+from robot.console.RobotLogger import RobotLogger
 
 
 class RobotSettings:

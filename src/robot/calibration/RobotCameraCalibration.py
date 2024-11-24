@@ -4,7 +4,7 @@ import glob
 import os
 import json
 
-from settings.RobotSettings import RobotSettings
+from robot.settings.RobotSettings import RobotSettings
 
 
 class RobotCameraCalibration:

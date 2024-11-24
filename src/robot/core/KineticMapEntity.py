@@ -1,7 +1,7 @@
-from control.MotorAction import MotorAction
-from control.MotorControl import MotorControl
-from control.MotorMode import MotorMode
-from console.RobotLogger import RobotLogger
+from robot.control.MotorAction import MotorAction
+from robot.control.MotorControl import MotorControl
+from robot.control.MovementMode import MovementMode
+from robot.console.RobotLogger import RobotLogger
 
 
 class KineticMapEntity:
@@ -10,10 +10,10 @@ class KineticMapEntity:
         self.moving = False
         self.__motor_control = motor_control
         self.__current_action: MotorAction = MotorAction.STOP
-        self.__motor_mode = MotorMode.NORMAL
+        self.__motor_mode = MovementMode.NORMAL
         self.__mode_changed = False
 
-    def set_motor_mode(self, mode: MotorMode):
+    def set_mode(self, mode: MovementMode):
         if mode != self.__motor_mode:
             self.__mode_changed = True
 

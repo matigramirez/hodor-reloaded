@@ -1,6 +1,6 @@
 from enum import Enum
 
 
-class MotorMode(Enum):
+class MovementMode(Enum):
     NORMAL = 0
     SLOW = 1

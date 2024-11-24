@@ -3,7 +3,7 @@ from termcolor import colored
 
 class RobotLogger:
     @staticmethod
-    def init(message: str):
+    def print(message: str):
         print(colored(message, 'dark_grey'))
 
     @staticmethod

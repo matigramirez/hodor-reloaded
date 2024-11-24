@@ -1,10 +1,11 @@
-from camera.RobotCamera import RobotCamera
-from detection.RobotTagDetector import RobotTagDetector
-from scanner.ScanResult import ScanResult
-from settings.RobotSettings import RobotSettings
 from collections import deque
 from statistics import mean
-from console.RobotLogger import RobotLogger
+
+from robot.camera.RobotCamera import RobotCamera
+from robot.tags.RobotTagDetector import RobotTagDetector
+from robot.scanner.ScanResult import ScanResult
+from robot.settings.RobotSettings import RobotSettings
+from robot.console.RobotLogger import RobotLogger
 
 
 class RobotScanner:

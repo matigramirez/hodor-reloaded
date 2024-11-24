@@ -3,8 +3,8 @@ import numpy as np
 import json
 import codecs
 
-from settings.RobotSettings import RobotSettings
-from console.RobotLogger import RobotLogger
+from robot.settings.RobotSettings import RobotSettings
+from robot.console.RobotLogger import RobotLogger
 
 
 class RobotCamera:
