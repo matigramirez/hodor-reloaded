@@ -8,6 +8,7 @@ from robot.core.KineticMapEntity import KineticMapEntity
 from robot.scanner.RobotScanner import RobotScanner
 from robot.settings.RobotSettings import RobotSettings
 from robot.console.RobotLogger import RobotLogger
+from robot.streaming.RobotVideoStream import RobotVideoStream
 
 
 class Robot(ABC, KineticMapEntity):
@@ -21,7 +22,6 @@ class Robot(ABC, KineticMapEntity):
         self.video_device_id = settings.video_device_id
         self.frame_width = settings.video_frame_width
         self.frame_height = settings.video_frame_height
-        self.enable_gui = settings.video_enable_gui
 
         self.__scanner: RobotScanner | None = None
 
@@ -37,7 +37,8 @@ class Robot(ABC, KineticMapEntity):
         else:
             raise Exception("calibration.json no encontrado. No es posible comenzar la rutina.")
 
-        self.__scanner = RobotScanner(self.camera, self.settings)
+        self.video_stream = RobotVideoStream(self.settings)
+        self.__scanner = RobotScanner(self.camera, self.settings, self.video_stream)
 
         RobotLogger.info("Inicialización finalizada")
 
@@ -49,9 +50,14 @@ class Robot(ABC, KineticMapEntity):
     def loop(self):
         pass
 
-    @abstractmethod
     def cleanup(self):
-        pass
+        # Detener motores
+        self.stop()
+
+        # Liberar recursos
+        self.motor_control.close()
+        self.camera.close()
+        self.video_stream.close()
 
     def set_status(self, status: Status):
         if self.__status == status:

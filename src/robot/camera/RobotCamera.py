@@ -13,7 +13,6 @@ class RobotCamera:
         self.__video_capture = cv2.VideoCapture(settings.video_device_id)
         self.__video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, settings.video_frame_width)
         self.__video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, settings.video_frame_height)
-        self.__enable_gui = settings.video_enable_gui
         self.__calibration_success = False
         self.__camera_matrix = None
         self.__dist_coeffs = None

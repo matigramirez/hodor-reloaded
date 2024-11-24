@@ -6,16 +6,20 @@ import numpy as np
 
 from robot.camera.RobotCamera import RobotCamera
 from robot.models.AprilTagEntity import AprilTagEntity
+from robot.settings.RobotSettings import RobotSettings
+from robot.streaming.RobotVideoStream import RobotVideoStream
 
 
 class RobotTagDetector:
-    def __init__(self, camera: RobotCamera, tag_family: str, tag_size: int, tag_id: int, enable_gui: bool = False):
+    def __init__(self, settings: RobotSettings, camera: RobotCamera, tag_family: str, tag_size: int, tag_id: int,
+                 video_stream: RobotVideoStream | None = None):
+        self.settings = settings
+        self.video_stream = video_stream
         self.__detector = Detector(families=tag_family)
         self.__camera = camera
         self.__fx, self.__fy, self.__cx, self.__cy = camera.get_parameters()
         self.__tag_size = tag_size
         self.__target_tag_id = tag_id
-        self.__enable_draw = enable_gui
 
     def detect_apriltags(self) -> List[AprilTagEntity]:
         cam_frame = None
@@ -38,7 +42,7 @@ class RobotTagDetector:
             if detection.tag_id != self.__target_tag_id:
                 continue
 
-            # Opencv usa el sistema de coordenadas  (x, -y, z) donde y es el eje de altura
+            # Opencv usa el sistema de coordenadas (x, -y, z) donde y es el eje de altura
             # Referencia: https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
             pos_x = detection.pose_t[0]
             pos_y = detection.pose_t[2]
@@ -50,7 +54,7 @@ class RobotTagDetector:
             angle_rad = np.arctan2(pos_x, pos_y)
             angle_deg = np.degrees(angle_rad)[0]
 
-            if self.__enable_draw:
+            if self.settings.video_stream_enable:
                 # Obtener contornos
                 (p1, p2, p3, p4) = detection.corners
                 p2 = (int(p2[0]), int(p2[1]))
@@ -80,7 +84,8 @@ class RobotTagDetector:
 
             results.append(AprilTagEntity(detection.tag_id, distance, angle_deg))
 
-            # TODO: Escribir frame para la transmisión acá
-            # draw(cam_frame)
+            if self.video_stream is not None:
+                # Transmitir frame
+                self.video_stream.stream(cam_frame)
 
         return results

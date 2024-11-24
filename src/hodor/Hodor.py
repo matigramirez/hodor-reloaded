@@ -13,7 +13,6 @@ class Hodor(Robot):
 
     def setup(self):
         self.stop()
-        pass
 
     def loop(self):
         RobotLogger.info("Iniciando rutina")
@@ -58,13 +57,3 @@ class Hodor(Robot):
             self.set_status(Status.MOVING_TOWARDS_TARGET)
 
         RobotLogger.info("Rutina finalizada")
-
-    def cleanup(self):
-        # Detener motores
-        self.stop()
-
-        # Liberar recursos
-        self.motor_control.close()
-        self.camera.close()
-
-        # TODO: Liberar socket transmisión acá

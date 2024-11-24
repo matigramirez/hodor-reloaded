@@ -22,5 +22,10 @@
       "linear": 400,
       "angular": 7
     }
+  },
+  "video_stream": {
+    "enable": false,
+    "ip": "0.0.0.0",
+    "port": 8089
   }
 }

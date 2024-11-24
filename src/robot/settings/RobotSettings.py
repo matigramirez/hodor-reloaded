@@ -11,7 +11,6 @@ class RobotSettings:
         self.video_device_id: int = 8
         self.video_frame_width: int = 1280
         self.video_frame_height: int = 720
-        self.video_enable_gui: bool = False
 
         # April Tags
         self.tag_far_size: int = 120
@@ -23,11 +22,16 @@ class RobotSettings:
         self.tag_threshold_sample_size: int = 5
 
         # Motors
-        self.motor_enable_movement: bool = True
+        self.motor_enable_movement: bool = False
 
         # Control
         self.control_tolerance_linear: int = 400
         self.control_tolerance_angular: int = 10
+
+        # Video Stream
+        self.video_stream_enable: bool = False
+        self.video_stream_ip: str = "0.0.0.0"
+        self.video_stream_port: int = 8089
 
     @staticmethod
     def read_from_file(file_path: str):
@@ -45,7 +49,6 @@ class RobotSettings:
         settings.video_device_id = settings_json["video"]["device_id"]
         settings.video_frame_width = settings_json["video"]["frame_width"]
         settings.video_frame_height = settings_json["video"]["frame_height"]
-        settings.video_enable_gui = settings_json["video"]["enable_gui"]
 
         # April Tags
         settings.tag_far_size = settings_json["tag"]["far_size"]
@@ -62,6 +65,11 @@ class RobotSettings:
         # Control
         settings.control_tolerance_linear = settings_json["control"]["tolerance"]["linear"]
         settings.control_tolerance_angular = settings_json["control"]["tolerance"]["angular"]
+
+        # Video Stream
+        settings.video_stream_enable = settings_json["video_stream"]["enable"]
+        settings.video_stream_ip = settings_json["video_stream"]["ip"]
+        settings.video_stream_port = settings_json["video_stream"]["port"]
 
         RobotLogger.info(file_path + " cargado")
 

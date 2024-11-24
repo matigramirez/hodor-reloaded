@@ -2,6 +2,7 @@ from collections import deque
 from statistics import mean
 
 from robot.camera.RobotCamera import RobotCamera
+from robot.streaming.RobotVideoStream import RobotVideoStream
 from robot.tags.RobotTagDetector import RobotTagDetector
 from robot.scanner.ScanResult import ScanResult
 from robot.settings.RobotSettings import RobotSettings
@@ -9,16 +10,16 @@ from robot.console.RobotLogger import RobotLogger
 
 
 class RobotScanner:
-    def __init__(self, camera: RobotCamera, settings: RobotSettings):
+    def __init__(self, camera: RobotCamera, settings: RobotSettings, video_stream: RobotVideoStream | None = None):
         self.settings = settings
 
-        self.__far_tag_detector = RobotTagDetector(camera, settings.tag_family, settings.tag_far_size,
+        self.__far_tag_detector = RobotTagDetector(settings, camera, settings.tag_family, settings.tag_far_size,
                                                    settings.tag_far_id,
-                                                   enable_gui=settings.video_enable_gui)
+                                                   video_stream)
 
-        self.__close_tag_detector = RobotTagDetector(camera, settings.tag_family, settings.tag_close_size,
+        self.__close_tag_detector = RobotTagDetector(settings, camera, settings.tag_family, settings.tag_close_size,
                                                      settings.tag_close_id,
-                                                     enable_gui=settings.video_enable_gui)
+                                                     video_stream)
 
         self.tag_detector = self.__far_tag_detector
 
