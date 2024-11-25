@@ -6,15 +6,14 @@ import struct
 import io
 from PIL import Image
 import numpy as np
+from robot.settings.RobotSettings import RobotSettings
 
 
-file_path = "src/settings.json"
-settings_json_str = codecs.open(file_path, 'r', encoding='utf-8').read()
-settings_json = json.loads(settings_json_str)
+settings = RobotSettings.read_from_file("settings.json")
 
 # Configuración del socket
-SERVER_IP = settings_json["video_stream"]["ip"]
-PORT = settings_json["video_stream"]["port"]
+SERVER_IP = settings.video_stream_ip
+PORT = settings.video_stream_port
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((SERVER_IP, PORT))
