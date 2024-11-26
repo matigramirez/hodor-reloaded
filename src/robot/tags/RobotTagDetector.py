@@ -84,8 +84,8 @@ class RobotTagDetector:
 
             results.append(AprilTagEntity(detection.tag_id, distance, angle_deg))
 
-            if self.video_stream is not None:
-                # Transmitir frame
-                self.video_stream.stream(cam_frame)
+        if self.video_stream is not None:
+            # Transmitir frame
+            self.video_stream.stream(cam_frame)
 
         return results
