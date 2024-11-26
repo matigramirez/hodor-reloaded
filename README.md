@@ -5,12 +5,6 @@
 Este repositorio contiene la documentación y el código fuente del proyecto final propuesto para la materia Introducción
 a los Vehículos Inteligentes en el cual se hace uso del robot Hodor.
 
-## Autores:
-
-- Marin Roth, Darío Alejandro
-- Ramirez Pelegrina, Matías Gonzalo
-- Valenti Cristallini, Giuliana
-
 ## Dependencias
 
 ### Debian
