@@ -2,6 +2,7 @@ import os
 from abc import ABC, abstractmethod
 
 from robot.camera.RobotCamera import RobotCamera
+from robot.common.CancellationToken import CancellationToken
 from robot.common.Status import Status
 from robot.control.MotorControl import MotorControl
 from robot.core.KineticMapEntity import KineticMapEntity
@@ -37,7 +38,8 @@ class Robot(ABC, KineticMapEntity):
         else:
             raise Exception("calibration.json no encontrado. No es posible comenzar la rutina.")
 
-        self.video_stream = RobotVideoStream(self.settings)
+        self.cancellation_token = CancellationToken()
+        self.video_stream = RobotVideoStream(self.settings, self.cancellation_token)
         self.__scanner = RobotScanner(self.camera, self.settings, self.video_stream)
 
         RobotLogger.info("Inicialización finalizada")
@@ -57,6 +59,7 @@ class Robot(ABC, KineticMapEntity):
         # Liberar recursos
         self.motor_control.close()
         self.camera.close()
+        self.cancellation_token.request_cancellation()
         self.video_stream.close()
 
     def set_status(self, status: Status):
