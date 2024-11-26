@@ -18,12 +18,12 @@ class RobotVideoStream:
             self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.server_socket.bind(('0.0.0.0', self.settings.video_stream_port))
             self.server_socket.listen(1)
-            self._accept_connection
+            self.__accept_connection__()
             return
         else:
             RobotLogger.warning("Streaming de video deshabilitado")
 
-    def _accept_connection(self):
+    def __accept_connection__(self):
         RobotLogger.info("Esperando conexión.")
         while True:
             try:
@@ -45,9 +45,10 @@ class RobotVideoStream:
         except (BrokenPipeError, ConnectionResetError) as e:
             RobotLogger.error(f"Conexión perdida con el cliente: {e}")
             self.conn.close()
-            self._accept_connection()
+            self.__accept_connection__()
 
     def close(self):
-        self.conn.close()
+        if self.conn is not None:
+            self.conn.close()
         self.server_socket.close()
         return
