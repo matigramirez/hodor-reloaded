@@ -57,7 +57,7 @@ class RobotSettings:
         settings.tag_close_size = settings_json["tag"]["close_size"]
         settings.tag_close_id = settings_json["tag"]["close_id"]
         settings.tag_threshold_distance = settings_json["tag"]["threshold_distance"]
-        settings.tag_threshold_distance = settings_json["tag"]["threshold_sample_size"]
+        settings.tag_threshold_sample_size = settings_json["tag"]["threshold_sample_size"]
         settings.tag_family = settings_json["tag"]["family"]
 
         # Motors
