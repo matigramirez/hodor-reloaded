@@ -17,7 +17,7 @@ RobotLogger.info("Conexión establecida con el servidor.")
 data = b""
 payload_size = struct.calcsize(">L")
 
-enable_video_output = True
+enable_video_output = False
 video_output: cv2.VideoWriter | None = None
 
 if enable_video_output:
