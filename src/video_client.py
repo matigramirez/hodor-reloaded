@@ -7,7 +7,6 @@ import numpy as np
 from robot.settings.RobotSettings import RobotSettings
 from robot.console.RobotLogger import RobotLogger
 
-
 settings = RobotSettings.read_from_file("settings.json")
 
 # Configuración del socket
@@ -18,9 +17,11 @@ RobotLogger.info("Conexión establecida con el servidor.")
 data = b""
 payload_size = struct.calcsize(">L")
 
+
 def pil_to_cv2(pil_image):
     numpy_image = np.array(pil_image)
     return cv2.cvtColor(numpy_image, cv2.COLOR_RGB2BGR)
+
 
 try:
     while True:
@@ -31,23 +32,23 @@ try:
                 if not packet:
                     RobotLogger.info("Conexión establecida con el servidor.")
                 data += packet
-            
+
             packed_msg_size = data[:payload_size]
             data = data[payload_size:]
             msg_size = struct.unpack(">L", packed_msg_size)[0]
-            
+
             while len(data) < msg_size:
                 packet = client_socket.recv(4096)
                 if not packet:
                     RobotLogger.info("Conexión establecida con el servidor.")
                 data += packet
-            
+
             frame_data = data[:msg_size]
             data = data[msg_size:]
-            
+
             pil_image = Image.open(io.BytesIO(frame_data))
             frame = pil_to_cv2(pil_image)
-            
+
             cv2.imshow('Video', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break

@@ -32,6 +32,7 @@ class RobotSettings:
         self.video_stream_enable: bool = False
         self.video_stream_ip: str = "0.0.0.0"
         self.video_stream_port: int = 8089
+        self.video_compression_level: int = 90
 
     @staticmethod
     def read_from_file(file_path: str):
@@ -70,6 +71,7 @@ class RobotSettings:
         settings.video_stream_enable = settings_json["video_stream"]["enable"]
         settings.video_stream_ip = settings_json["video_stream"]["ip"]
         settings.video_stream_port = settings_json["video_stream"]["port"]
+        settings.video_compression_level = settings_json["video_stream"]["compression_level"]
 
         RobotLogger.info(file_path + " cargado")
 

@@ -33,6 +33,8 @@ class Hodor(Robot):
                     self.__start_requested = False
                     self.play()
 
+                self.__stream_frame__()
+
                 time.sleep(0.3)
 
             except CancellationRequestedException:
@@ -51,6 +53,12 @@ class Hodor(Robot):
         RobotLogger.print("'s': comenzar rutina")
         RobotLogger.print("'p': detener rutina")
         RobotLogger.print("'q': cancelar ejecución")
+
+    def __stream_frame__(self):
+        frame = self.camera.get_frame()
+
+        if frame is not None:
+            self.video_stream.stream(frame)
 
     def play(self):
         RobotLogger.info("Iniciando rutina")
