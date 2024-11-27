@@ -1,8 +1,7 @@
 from robot.calibration.RobotCameraCalibration import RobotCameraCalibration
 from robot.settings.RobotSettings import RobotSettings
 
-settings = RobotSettings()
-settings.read_from_file("settings.json")
+settings = RobotSettings.read_from_file("settings.json")
 
 camera_calibration = RobotCameraCalibration(settings)
 
