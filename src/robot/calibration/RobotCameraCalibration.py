@@ -126,6 +126,8 @@ class RobotCameraCalibration:
 
         self.__calibration_success = True
 
+        self.__set_parameters_from_matrix__()
+
         print("[INFO] Calibración finalizada. Parámetros de cámara:")
         print("f: ({}, {})".format(self.__fx, self.__fy))
         print("c: ({}, {})".format(self.__cx, self.__cy))
@@ -150,3 +152,9 @@ class RobotCameraCalibration:
             outfile.write(json_calibration_data)
 
         print("[INFO] Calibración {} guardada exitosamente".format(file_path))
+
+    def __set_parameters_from_matrix__(self):
+        self.__fx = self.__camera_matrix[0][0]
+        self.__fy = self.__camera_matrix[1][1]
+        self.__cx = self.__camera_matrix[0][2]
+        self.__cy = self.__camera_matrix[1][2]
