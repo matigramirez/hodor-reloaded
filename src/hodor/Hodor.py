@@ -35,8 +35,6 @@ class Hodor(Robot):
 
                 self.__stream_frame__()
 
-                time.sleep(0.3)
-
             except CancellationRequestedException:
                 self.stop()
                 RobotLogger.info("Rutina cancelada por el usuario")
