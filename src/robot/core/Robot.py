@@ -5,6 +5,7 @@ from robot.camera.RobotCamera import RobotCamera
 from robot.common.CancellationToken import CancellationToken
 from robot.common.Status import Status
 from robot.control.MotorControl import MotorControl
+from robot.control.MovementMode import MovementMode
 from robot.core.KineticMapEntity import KineticMapEntity
 from robot.scanner.RobotScanner import RobotScanner
 from robot.settings.RobotSettings import RobotSettings
@@ -106,3 +107,14 @@ class Robot(ABC, KineticMapEntity):
 
     def move_towards_target(self):
         self.move_forward()
+
+    def update_movement_mode(self):
+        scan = self.__scanner.scan()
+
+        if scan is None:
+            return
+
+        if scan.distance < self.settings.motor_movement_threshold_distance:
+            self.set_mode(MovementMode.SLOW)
+        else:
+            self.set_mode(MovementMode.NORMAL)

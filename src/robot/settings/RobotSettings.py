@@ -23,6 +23,7 @@ class RobotSettings:
 
         # Motors
         self.motor_enable_movement: bool = False
+        self.motor_movement_threshold_distance: int = 1000
 
         # Control
         self.control_tolerance_linear: int = 400
@@ -62,6 +63,7 @@ class RobotSettings:
 
         # Motors
         settings.motor_enable_movement = settings_json["motor"]["enable_movement"]
+        settings.motor_movement_threshold_distance = settings_json["motor"]["movement_threshold_distance"]
 
         # Control
         settings.control_tolerance_linear = settings_json["control"]["tolerance"]["linear"]

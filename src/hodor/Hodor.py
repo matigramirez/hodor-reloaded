@@ -32,6 +32,7 @@ class Hodor(Robot):
                 if self.__start_requested:
                     self.__start_requested = False
                     self.play()
+                    self.__print_available_commands__()
 
                 self.__stream_frame__()
 
@@ -64,11 +65,13 @@ class Hodor(Robot):
         while True:
             self.__execute_command__()
 
-            while self.is_target_reached():
+            if self.is_target_reached():
                 self.__execute_command__()
 
                 self.stop()
                 self.set_status(Status.TARGET_REACHED)
+                RobotLogger.info("Rutina finalizada")
+                return
 
             # Encontrar base
             while not self.is_target_found():
@@ -109,10 +112,9 @@ class Hodor(Robot):
             self.__execute_command__()
 
             # Moverse hacia la base
+            self.update_movement_mode()
             self.move_towards_target()
             self.set_status(Status.MOVING_TOWARDS_TARGET)
-
-        RobotLogger.info("Rutina finalizada")
 
     def cleanup(self):
         super().cleanup()

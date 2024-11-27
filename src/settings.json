@@ -14,7 +14,8 @@
     "threshold_sample_size": 5
   },
   "motor": {
-    "enable_movement": false
+    "enable_movement": false,
+    "movement_threshold_distance": 800
   },
   "control": {
     "tolerance": {
@@ -23,7 +24,7 @@
     }
   },
   "video_stream": {
-    "enable": false,
+    "enable": true,
     "ip": "0.0.0.0",
     "port": 8089,
     "compression_level": 90

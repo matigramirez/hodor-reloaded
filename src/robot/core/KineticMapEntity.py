@@ -14,10 +14,13 @@ class KineticMapEntity:
         self.__mode_changed = False
 
     def set_mode(self, mode: MovementMode):
-        if mode != self.__motor_mode:
-            self.__mode_changed = True
+        if mode == self.__motor_mode:
+            return
 
+        self.__mode_changed = True
         self.__motor_mode = mode
+        self.__motor_control.set_mode(mode)
+        RobotLogger.info("Motor mode set to {}".format(mode))
 
     def move_forward(self):
         if self.__mode_changed or self.__current_action != MotorAction.FORWARD:
