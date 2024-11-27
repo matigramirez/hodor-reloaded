@@ -17,6 +17,12 @@ RobotLogger.info("Conexión establecida con el servidor.")
 data = b""
 payload_size = struct.calcsize(">L")
 
+enable_video_output = True
+video_output: cv2.VideoWriter | None = None
+
+if enable_video_output:
+    video_output = cv2.VideoWriter('output.mp4', cv2.VideoWriter.fourcc(*'mp4v'), 10, (1280, 720))
+
 
 def pil_to_cv2(pil_image):
     numpy_image = np.array(pil_image)
@@ -50,6 +56,10 @@ try:
             frame = pil_to_cv2(pil_image)
 
             cv2.imshow('Video', frame)
+
+            if enable_video_output and video_output is not None:
+                video_output.write(frame)
+
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         except (socket.error, ConnectionError):
@@ -59,4 +69,8 @@ try:
 finally:
     client_socket.close()
     cv2.destroyAllWindows()
+
+    if enable_video_output and video_output is not None:
+        video_output.release()
+
     exit(0)
