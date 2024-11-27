@@ -37,7 +37,6 @@ class RobotVideoStream:
         self.__accept_connection__()
 
     def __accept_connection__(self):
-        self.stream_queue.clear()
         RobotLogger.info("Esperando conexión.")
         while True:
             try:
@@ -45,6 +44,7 @@ class RobotVideoStream:
                     raise Exception("Cancelación solicitada")
 
                 self.conn, self.addr = self.server_socket.accept()
+                self.stream_queue.clear()
                 RobotLogger.info(f"Conexión establecida con {self.addr}.")
 
                 while True:
