@@ -38,13 +38,15 @@ class RobotScanner:
         distance = april_tags[0].distance
         angle = april_tags[0].angle
 
-        RobotLogger.log("April tag detectado [{}] (dist: {}mm  |  ang: {}°)".format(
+        self.__latest_samples.append(distance)
+
+        RobotLogger.log("April tag detectado [{}] (dist: {:.2f}mm  |  ang: {:.2f}°)".format(
             "corto alcance" if self.__is_nearby else "largo alcance", distance, angle))
 
         return ScanResult(distance, angle)
 
     def update_detector(self):
-        if len(self.__latest_samples) <= self.settings.tag_threshold_sample_size:
+        if len(self.__latest_samples) < self.settings.tag_threshold_sample_size:
             return
 
         avg = mean(self.__latest_samples)
