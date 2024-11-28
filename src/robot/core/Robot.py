@@ -25,7 +25,7 @@ class Robot(ABC, KineticMapEntity):
         self.frame_width = settings.video_frame_width
         self.frame_height = settings.video_frame_height
 
-        self.__scanner: RobotScanner | None = None
+        self.scanner: RobotScanner | None = None
 
         self.__status = Status.INITIALIZING
 
@@ -41,7 +41,7 @@ class Robot(ABC, KineticMapEntity):
 
         self.cancellation_token = CancellationToken()
         self.video_stream = RobotVideoStream(self.settings, self.cancellation_token)
-        self.__scanner = RobotScanner(self.camera, self.settings, self.video_stream)
+        self.scanner = RobotScanner(self.camera, self.settings, self.video_stream)
 
         RobotLogger.info("Inicialización finalizada")
 
@@ -71,7 +71,7 @@ class Robot(ABC, KineticMapEntity):
         RobotLogger.log("Status: " + str(status))
 
     def is_target_reached(self) -> bool:
-        scan = self.__scanner.scan()
+        scan = self.scanner.scan()
 
         if scan is None:
             return False
@@ -79,10 +79,10 @@ class Robot(ABC, KineticMapEntity):
         return scan.distance <= self.settings.control_tolerance_linear
 
     def is_target_found(self) -> bool:
-        return self.__scanner.scan() is not None
+        return self.scanner.scan() is not None
 
     def is_aligned(self) -> bool:
-        scan = self.__scanner.scan()
+        scan = self.scanner.scan()
 
         if scan is None:
             return False
@@ -93,7 +93,7 @@ class Robot(ABC, KineticMapEntity):
         self.turn_right()
 
     def align_to_target(self):
-        scan = self.__scanner.scan()
+        scan = self.scanner.scan()
 
         if scan is None:
             return
@@ -109,7 +109,7 @@ class Robot(ABC, KineticMapEntity):
         self.move_forward()
 
     def update_movement_mode(self):
-        scan = self.__scanner.scan()
+        scan = self.scanner.scan()
 
         if scan is None:
             return
