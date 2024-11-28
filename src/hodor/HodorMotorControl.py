@@ -53,30 +53,15 @@ class HodorMotorControl(MotorControl):
 
     def forward(self):
         if self.robot_settings.motor_enable_movement:
-            if self.__mode == MovementMode.SLOW:
-                self.__send_movement__(self.settings.movement_slow_forward_speed_right,
-                                       self.settings.movement_slow_forward_speed_left)
-            else:
-                self.__send_movement__(self.settings.movement_normal_forward_speed_right,
-                                       self.settings.movement_normal_forward_speed_left)
+            self.__send_movement__(128+50, 153+50)
 
     def turn_right(self):
         if self.robot_settings.motor_enable_movement:
-            if self.__mode == MovementMode.SLOW:
-                self.__send_movement__(self.settings.movement_slow_turn_right_speed_right,
-                                       self.settings.movement_slow_turn_right_speed_left)
-            else:
-                self.__send_movement__(self.settings.movement_normal_turn_right_speed_right,
-                                       self.settings.movement_normal_turn_right_speed_left)
+            self.__send_movement__(127-25-50-50, 128+25+50+50)
 
     def turn_left(self):
         if self.robot_settings.motor_enable_movement:
-            if self.__mode == MovementMode.SLOW:
-                self.__send_movement__(self.settings.movement_slow_turn_left_speed_right,
-                                       self.settings.movement_slow_turn_left_speed_right)
-            else:
-                self.__send_movement__(self.settings.movement_normal_turn_left_speed_right,
-                                       self.settings.movement_normal_turn_left_speed_right)
+            self.__send_movement__(128+25+50+50, 127-25-50-50)
 
     def close(self):
         if self.serial is not None:

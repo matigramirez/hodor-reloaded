@@ -1,3 +1,5 @@
+import time
+
 from robot.control.MotorAction import MotorAction
 from robot.control.MotorControl import MotorControl
 from robot.control.MovementMode import MovementMode
@@ -29,6 +31,7 @@ class KineticMapEntity:
             self.__mode_changed = False
             self.__current_action = MotorAction.FORWARD
             self.__motor_control.forward()
+            time.sleep(.2)
 
     def stop(self):
         if self.__mode_changed or self.__current_action != MotorAction.STOP:
@@ -37,6 +40,7 @@ class KineticMapEntity:
             self.__mode_changed = False
             self.__current_action = MotorAction.STOP
             self.__motor_control.stop()
+            time.sleep(.2)
 
     def turn_left(self):
         if self.__mode_changed or self.__current_action != MotorAction.LEFT:
@@ -45,6 +49,7 @@ class KineticMapEntity:
             self.__mode_changed = False
             self.__current_action = MotorAction.LEFT
             self.__motor_control.turn_left()
+            time.sleep(.2)
 
     def turn_right(self):
         if self.__mode_changed or self.__current_action != MotorAction.RIGHT:
@@ -53,3 +58,4 @@ class KineticMapEntity:
             self.__mode_changed = False
             self.__current_action = MotorAction.RIGHT
             self.__motor_control.turn_right()
+            time.sleep(.2)

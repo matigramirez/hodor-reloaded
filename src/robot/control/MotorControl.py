@@ -5,10 +5,10 @@ from robot.control.MovementMode import MovementMode
 
 class MotorControl(ABC):
     def __init__(self):
-        self.__mode: MovementMode = MovementMode.NORMAL
+        self.mode: MovementMode = MovementMode.NORMAL
 
     def set_mode(self, mode: MovementMode):
-        self.__mode = mode
+        self.mode = mode
 
     @abstractmethod
     def stop(self):

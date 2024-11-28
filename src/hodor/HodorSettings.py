@@ -14,10 +14,10 @@ class HodorSettings:
         # Movement
         self.movement_normal_forward_speed_right: int = 128
         self.movement_normal_forward_speed_left: int = 153
-        self.movement_normal_turn_right_speed_right: int = 218
-        self.movement_normal_turn_right_speed_left: int = 37
-        self.movement_normal_turn_left_speed_right: int = 52
-        self.movement_normal_turn_left_speed_left: int = 203
+        self.movement_normal_turn_right_speed_right: int = 2
+        self.movement_normal_turn_right_speed_left: int = 253
+        self.movement_normal_turn_left_speed_right: int = 253
+        self.movement_normal_turn_left_speed_left: int = 2
 
         self.movement_slow_forward_speed_right: int = 128
         self.movement_slow_forward_speed_left: int = 153

@@ -1,3 +1,5 @@
+import time
+
 from hodor.HodorInputHandler import HodorInputHandler
 from robot.control.MotorControl import MotorControl
 from robot.core.Robot import Robot
@@ -31,6 +33,8 @@ class HodorKeyboard(Robot):
                 self.stop()
             elif command == 'q' or command == 'x':
                 return
+
+            time.sleep(.2)
 
             self.scanner.scan()
 
