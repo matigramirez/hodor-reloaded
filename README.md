@@ -24,6 +24,7 @@ Deben instalarse los siguientes paquetes mediante `pip`:
 - `numpy`
 - `opencv-python`
 - `termcolor`
+- `pillow`
 
 Ejemplo: `pip install nombre_del_paquete`
 
