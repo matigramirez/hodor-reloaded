@@ -1,5 +1,3 @@
-import time
-
 from hodor.HodorInputHandler import HodorInputHandler
 from robot.common.Status import Status
 from robot.control.MotorControl import MotorControl

@@ -1,5 +1,3 @@
-import time
-
 from hodor.HodorInputHandler import HodorInputHandler
 from robot.control.MotorControl import MotorControl
 from robot.core.Robot import Robot
@@ -31,10 +29,10 @@ class HodorKeyboard(Robot):
                 self.turn_right()
             elif command == 'p':
                 self.stop()
-            elif command == 'x':
+            elif command == 'q' or command == 'x':
                 return
 
-            time.sleep(0.3)
+            self.scanner.scan()
 
     @staticmethod
     def __print_available_commands__():
